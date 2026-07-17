@@ -1,0 +1,36 @@
+name: Daily Reddit momentum scan
+
+on:
+  schedule:
+    # 11:30 UTC = 7:30am ET (adjusts to 6:30am during standard time) - before US market open, weekdays
+    - cron: "30 11 * * 1-5"
+  workflow_dispatch: {}   # lets you trigger a run manually from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scanner
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scanner.py
+
+      - name: Commit report and history
+        run: |
+          git config user.name "momentum-bot"
+          git config user.email "actions@github.com"
+          git add data/ reports/ REPORT.md
+          git diff --cached --quiet || git commit -m "Daily scan $(date -u +%F)"
+          git push
