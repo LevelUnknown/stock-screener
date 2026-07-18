@@ -65,6 +65,8 @@ TICKER_BLACKLIST = {
     "RE", "VC", "CIA", "EOD", "USA", "IRS", "ETF", "AI", "EV", "GDP", "CPI",
     "FOMO", "OTM", "ITM", "IV", "PE", "APE", "BE", "GO", "SO", "OR", "AN", "BY",
     "DTE",  # options slang ("0DTE"), not DTE Energy — verified by reading posts 2026-07-18; remove if the utility ever genuinely trends
+    "HBM",  # High Bandwidth Memory jargon (Micron/SK Hynix threads), not Hudbay Minerals — remove if the miner genuinely trends
+    "OS",   # "operating system" in tech-stock talk, not OneStream — remove if OneStream genuinely trends
 }
 
 # ETFs, funds, and defensive mega-caps — mentioned constantly in portfolio talk,
