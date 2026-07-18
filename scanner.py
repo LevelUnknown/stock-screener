@@ -55,6 +55,7 @@ TICKER_BLACKLIST = {
     "DD", "CEO", "IPO", "YOLO", "ATH", "EPS", "PT", "IT", "ALL", "ON", "A", "I",
     "RE", "VC", "CIA", "EOD", "USA", "IRS", "ETF", "AI", "EV", "GDP", "CPI",
     "FOMO", "OTM", "ITM", "IV", "PE", "APE", "BE", "GO", "SO", "OR", "AN", "BY",
+    "DTE",  # options slang ("0DTE"), not DTE Energy — verified by reading posts 2026-07-18; remove if the utility ever genuinely trends
 }
 
 # ETFs, funds, and defensive mega-caps — mentioned constantly in portfolio talk,
@@ -171,19 +172,23 @@ def fetch_reddit_posts(ticker: str, limit: int = 3) -> list[dict]:
         return []
 
 
-def fetch_price_change(ticker: str) -> float | None:
-    """5-day % price change from Yahoo Finance chart API (context, not a signal)."""
+def fetch_price_data(ticker: str) -> tuple[float | None, float | None]:
+    """(5-day % change, latest close) from Yahoo Finance chart API."""
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?range=5d&interval=1d"
     try:
         resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=20)
         resp.raise_for_status()
         closes = resp.json()["chart"]["result"][0]["indicators"]["quote"][0]["close"]
         closes = [c for c in closes if c is not None]
-        if len(closes) >= 2 and closes[0]:
-            return round((closes[-1] - closes[0]) / closes[0] * 100, 1)
+        if closes:
+            last = round(closes[-1], 2)
+            pct = None
+            if len(closes) >= 2 and closes[0]:
+                pct = round((closes[-1] - closes[0]) / closes[0] * 100, 1)
+            return pct, last
     except Exception:  # noqa: BLE001
         pass
-    return None
+    return None, None
 
 
 # ---------------------------------------------------------------- scoring
@@ -278,9 +283,72 @@ def sentiment_score(ticker: str, posts: list[dict]) -> tuple[float, str]:
         return 0.5, "sentiment unavailable"
 
 
+PICKS_FILE = Path("data/picks.json")
+PICKS_KEEP_DAYS = 40
+
+
+def load_picks() -> dict:
+    if PICKS_FILE.exists():
+        return json.loads(PICKS_FILE.read_text())
+    return {}
+
+
+def save_picks(picks: dict) -> None:
+    cutoff = sorted(picks.keys())[-PICKS_KEEP_DAYS:]
+    PICKS_FILE.write_text(json.dumps({d: picks[d] for d in cutoff}, indent=0))
+
+
+def evaluate_picks(picks: dict, today: str) -> None:
+    """Fill in 3-day and 7-day returns for past picks once they're old enough."""
+    today_dt = datetime.strptime(today, "%Y-%m-%d")
+    for date_str, entries in picks.items():
+        age = (today_dt - datetime.strptime(date_str, "%Y-%m-%d")).days
+        for e in entries:
+            if not e.get("price"):
+                continue
+            for horizon in (3, 7):
+                key = f"ret_{horizon}d"
+                if key not in e and age >= horizon:
+                    _, px = fetch_price_data(e["ticker"])
+                    time.sleep(0.5)
+                    if px:
+                        e[key] = round((px - e["price"]) / e["price"] * 100, 1)
+
+
+def record_picks(picks: dict, today: str, ranked: list[dict]) -> None:
+    picks[today] = [
+        {"ticker": r["ticker"], "price": r.get("price_now"), "composite": r["composite"]}
+        for r in ranked
+    ]
+
+
+def build_scoreboard(picks: dict, today: str) -> tuple[list[str], str | None]:
+    """Recent evaluated picks + running aggregate stats."""
+    rows, all_3d = [], []
+    for date_str in sorted(picks.keys(), reverse=True):
+        if date_str == today:
+            continue
+        for e in picks[date_str]:
+            if "ret_3d" in e:
+                all_3d.append(e["ret_3d"])
+            if "ret_3d" in e or "ret_7d" in e:
+                r3 = f"{e['ret_3d']:+.1f}%" if "ret_3d" in e else "–"
+                r7 = f"{e['ret_7d']:+.1f}%" if "ret_7d" in e else "–"
+                rows.append(f"| {date_str} | ${e['ticker']} | {e['composite']:.2f} | {r3} | {r7} |")
+    rows = rows[:15]
+    summary = None
+    if all_3d:
+        wins = sum(1 for x in all_3d if x > 0)
+        summary = (f"Across {len(all_3d)} evaluated picks: average 3-day return "
+                   f"{statistics.mean(all_3d):+.1f}%, {wins}/{len(all_3d)} positive "
+                   f"({wins / len(all_3d) * 100:.0f}% hit rate).")
+    return rows, summary
+
+
 # ---------------------------------------------------------------- report
 
-def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: list[dict]) -> str:
+def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: list[dict],
+                 score_rows: list[str] | None = None, score_summary: str | None = None) -> str:
     lines = [f"# Reddit momentum digest — {today}", ""]
     lines.append("*Idea-surfacing only — not financial advice. Verify everything before trading.*")
     lines.append("")
@@ -310,7 +378,7 @@ def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: 
         lines.append(f"- Breadth: {r['breadth_note']}")
         lines.append(f"- Sentiment: {r['sentiment_note']}")
         if r["price_5d"] is not None:
-            crowd = "price already moved — crowd may be late" if abs(r["price_5d"]) > 25 \
+            crowd = "price already moved — crowd may be reacting" if abs(r["price_5d"]) > 10 \
                 else "chatter building, price relatively quiet"
             lines.append(f"- 5-day price: {r['price_5d']:+.1f}% ({crowd})")
         for p in r.get("posts", [])[:2]:
@@ -321,6 +389,16 @@ def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: 
         lines.append("## Watchlist — how yesterday's names are trending")
         for w in watchlist:
             lines.append(f"- **${w['ticker']}**: mentions {w['prev']} → {w['now']} ({w['trend']})")
+        lines.append("")
+
+    if score_rows:
+        lines.append("## Hit-rate scoreboard — did past picks actually move?")
+        if score_summary:
+            lines.append(f"*{score_summary}*")
+            lines.append("")
+        lines.append("| Pick date | Ticker | Score | 3d return | 7d return |")
+        lines.append("|-----------|--------|-------|-----------|-----------|")
+        lines.extend(score_rows)
         lines.append("")
 
     return "\n".join(lines)
@@ -375,7 +453,7 @@ def main() -> int:
         r["posts"] = fetch_reddit_posts(r["ticker"])
         time.sleep(2)  # respect Reddit's unauthenticated rate limits
         r["sentiment"], r["sentiment_note"] = sentiment_score(r["ticker"], r["posts"])
-        r["price_5d"] = fetch_price_change(r["ticker"])
+        r["price_5d"], r["price_now"] = fetch_price_data(r["ticker"])
         r["composite"] = round(
             r["velocity"] * WEIGHTS["velocity"]
             + r["sentiment"] * WEIGHTS["sentiment"]
@@ -386,12 +464,18 @@ def main() -> int:
     alerts = [r for r in ranked if r["zscore"] >= ALERT_ZSCORE]
     watchlist = build_watchlist(history, tickers, today)
 
-    report = build_report(today, ranked, alerts, watchlist)
+    picks = load_picks()
+    evaluate_picks(picks, today)
+    record_picks(picks, today, ranked)
+    score_rows, score_summary = build_scoreboard(picks, today)
+
+    report = build_report(today, ranked, alerts, watchlist, score_rows, score_summary)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     (REPORTS_DIR / f"{today}.md").write_text(report)
     LATEST_REPORT.write_text(report)
 
     save_history(history, today, tickers)
+    save_picks(picks)
     print(f"Report written: reports/{today}.md")
     return 0
 
