@@ -1,0 +1,54 @@
+{
+"2026-07-18": [
+{
+"ticker": "SLS",
+"price": 13.19,
+"composite": 0.537
+},
+{
+"ticker": "META",
+"price": 646.01,
+"composite": 0.42
+},
+{
+"ticker": "TE",
+"price": 5.84,
+"composite": 0.417
+},
+{
+"ticker": "USO",
+"price": 123.96,
+"composite": 0.415
+},
+{
+"ticker": "NVDA",
+"price": 202.81,
+"composite": 0.396
+},
+{
+"ticker": "MU",
+"price": 848.95,
+"composite": 0.39
+},
+{
+"ticker": "SPCX",
+"price": 123.99,
+"composite": 0.39
+},
+{
+"ticker": "NFLX",
+"price": 68.95,
+"composite": 0.39
+},
+{
+"ticker": "MSFT",
+"price": 393.82,
+"composite": 0.39
+},
+{
+"ticker": "AAPL",
+"price": 333.74,
+"composite": 0.39
+}
+]
+}
