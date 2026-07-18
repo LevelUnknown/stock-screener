@@ -15,6 +15,7 @@ import time
 import statistics
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 import requests
 
@@ -47,6 +48,14 @@ REDDIT_CLIENT_ID = os.environ.get("REDDIT_CLIENT_ID", "")
 REDDIT_CLIENT_SECRET = os.environ.get("REDDIT_CLIENT_SECRET", "")
 
 USER_AGENT = "windows:momentum-scanner:v1.1 (personal research tool)"
+
+# Tickers YOU always want tracked, regardless of chatter thresholds.
+# Format: "TICKER": "Company name" — the name is used to search Reddit directly
+# (catches discussion that doesn't use the ticker, e.g. brand-new IPOs that
+# mention-counting services haven't indexed yet).
+MY_WATCHLIST = {
+    "SKHY": "SK Hynix",
+}
 
 MIN_MENTIONS = 15          # ignore tickers below this — single-digit counts are noise
 
@@ -90,7 +99,8 @@ def collect_mentions() -> dict:
         time.sleep(1)  # be polite
         for row in rows:
             sym = row.get("ticker", "").upper().strip()
-            if (not sym or sym in TICKER_BLACKLIST or sym in EXCLUDED_TICKERS
+            if sym not in MY_WATCHLIST and (
+                    not sym or sym in TICKER_BLACKLIST or sym in EXCLUDED_TICKERS
                     or not re.fullmatch(r"[A-Z.]{1,6}", sym)):
                 continue
             entry = tickers.setdefault(sym, {
@@ -141,16 +151,18 @@ def get_reddit_token() -> str | None:
     return _reddit_token
 
 
-def fetch_reddit_posts(ticker: str, limit: int = 3) -> list[dict]:
-    """Pull today's top posts mentioning the ticker. Uses OAuth if configured."""
+def fetch_reddit_posts(ticker: str, limit: int = 3, query: str | None = None) -> list[dict]:
+    """Pull today's top posts mentioning the ticker. Uses OAuth if configured.
+    Pass `query` to search custom terms (e.g. ticker OR company name)."""
     token = get_reddit_token()
     base = "https://oauth.reddit.com" if token else "https://www.reddit.com"
     headers = {"User-Agent": USER_AGENT}
     if token:
         headers["Authorization"] = f"Bearer {token}"
+    q = quote(query or ticker)
     url = (
         f"{base}/r/wallstreetbets+stocks+pennystocks+options+smallstreetbets"
-        f"/search.json?q={ticker}&restrict_sr=1&sort=top&t=day&limit={limit}"
+        f"/search.json?q={q}&restrict_sr=1&sort=top&t=day&limit={limit}"
     )
     try:
         resp = requests.get(url, headers=headers, timeout=30)
@@ -200,7 +212,10 @@ def load_history() -> dict:
 
 
 def save_history(history: dict, today: str, tickers: dict) -> None:
-    history[today] = {sym: e["mentions"] for sym, e in tickers.items()}
+    day = {sym: e["mentions"] for sym, e in tickers.items()}
+    for sym in MY_WATCHLIST:
+        day.setdefault(sym, 0)  # keep watchlist baselines building even when quiet
+    history[today] = day
     dates = sorted(history.keys())[-HISTORY_DAYS:]
     HISTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
     HISTORY_FILE.write_text(json.dumps({d: history[d] for d in dates}, indent=0))
@@ -358,6 +373,41 @@ def build_scoreboard(picks: dict, today: str) -> tuple[list[list[str]], str | No
     return rows, summary
 
 
+# ---------------------------------------------------------------- my watchlist
+
+def build_my_watchlist(tickers: dict, history: dict) -> list[dict]:
+    """Always-on tracking for MY_WATCHLIST tickers, independent of thresholds."""
+    out = []
+    for sym, name in MY_WATCHLIST.items():
+        e = tickers.get(sym, {})
+        mentions = e.get("mentions", 0)
+        series = [day.get(sym, 0) for day in history.values()]
+        prev = series[-1] if series else None
+
+        if prev and mentions >= prev * 3 and mentions >= 10:
+            status = f"SPIKE — {mentions / prev:.1f}x yesterday's chatter"
+        elif prev is not None and mentions > prev:
+            status = "rising"
+        elif prev is not None and mentions < prev:
+            status = "cooling"
+        else:
+            status = "quiet" if mentions < 5 else "steady"
+
+        pct5, last = fetch_price_data(sym)
+        time.sleep(0.5)
+        # Search by ticker OR company name — catches new listings that
+        # mention-counters haven't indexed and posts that don't use the cashtag.
+        posts = fetch_reddit_posts(sym, limit=3, query=f'"{sym}" OR "{name}"')
+        time.sleep(2)
+
+        out.append({
+            "ticker": sym, "name": name, "mentions": mentions, "prev": prev,
+            "status": status, "price_5d": pct5, "price_now": last,
+            "posts": posts, "subs": len(e.get("subs", {})),
+        })
+    return out
+
+
 # ---------------------------------------------------------------- setup labels
 
 def classify_setup(r: dict) -> tuple[str, float, str]:
@@ -417,7 +467,8 @@ def format_table(headers: list[str], rows: list[list[str]]) -> list[str]:
 
 
 def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: list[dict],
-                 score_rows: list[list[str]] | None = None, score_summary: str | None = None) -> str:
+                 score_rows: list[list[str]] | None = None, score_summary: str | None = None,
+                 my_watchlist: list[dict] | None = None) -> str:
     lines = [f"# Reddit momentum digest — {today}", ""]
     lines.append("*Idea-surfacing only — not financial advice. Verify everything before trading.*")
     lines.append("")
@@ -447,6 +498,29 @@ def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: 
                  "EARLY = chatter building before price; CROWD REACTION = chatter chasing a move; "
                  "EVENT GAMBLE = binary catalyst ahead; FADING = losing steam; NOISE = background hum.*")
     lines.append("")
+
+    if my_watchlist:
+        lines.append("## My watchlist")
+        for w in my_watchlist:
+            prev_txt = w["prev"] if w["prev"] is not None else "n/a"
+            price_bits = []
+            if w["price_5d"] is not None:
+                price_bits.append(f"{w['price_5d']:+.1f}% (5d)")
+            if w["price_now"] is not None:
+                price_bits.append(f"last ${w['price_now']}")
+            price_txt = ", ".join(price_bits) if price_bits else "price unavailable"
+            lines.append(f"### ${w['ticker']} — {w['name']}")
+            lines.append(f"- Mentions: {w['mentions']} (yesterday: {prev_txt}) — **{w['status']}**"
+                         + (f", seen in {w['subs']} subs" if w["subs"] else ""))
+            lines.append(f"- Price: {price_txt}")
+            if w["posts"]:
+                for p in w["posts"][:2]:
+                    lines.append(f"- Post: [{p['title'][:80]}]({p['url']}) "
+                                 f"(r/{p['subreddit']}, {p['score']} upvotes)")
+            else:
+                lines.append("- No posts retrieved (Reddit access pending or genuinely quiet)")
+        lines.append("")
+
 
     lines.append("## Why they're here")
     for r in ranked:
@@ -555,8 +629,9 @@ def main() -> int:
     evaluate_picks(picks, today)
     record_picks(picks, today, ranked)
     score_rows, score_summary = build_scoreboard(picks, today)
+    my_watchlist = build_my_watchlist(tickers, history)
 
-    report = build_report(today, ranked, alerts, watchlist, score_rows, score_summary)
+    report = build_report(today, ranked, alerts, watchlist, score_rows, score_summary, my_watchlist)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     (REPORTS_DIR / f"{today}.md").write_text(report)
     LATEST_REPORT.write_text(report)
