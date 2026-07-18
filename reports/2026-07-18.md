@@ -6,73 +6,74 @@
 
 | # | Ticker | Score | Mentions | Velocity | Sentiment | Breadth | 5d price |
 |---|--------|-------|----------|----------|-----------|---------|----------|
-| 1 | **$VC** | 0.75 | 9 | 1.00 | 0.40 | 0.85 | +1.3% |
-| 2 | **$CRM** | 0.71 | 8 | 1.00 | 0.40 | 0.70 | -0.3% |
-| 3 | **$SGOV** | 0.71 | 7 | 1.00 | 0.40 | 0.70 | +0.1% |
-| 4 | **$RE** | 0.68 | 9 | 1.00 | 0.40 | 0.55 | – |
-| 5 | **$BATL** | 0.68 | 11 | 1.00 | 0.40 | 0.55 | -7.9% |
-| 6 | **$PG** | 0.61 | 10 | 1.00 | 0.40 | 0.30 | +1.1% |
-| 7 | **$TQQQ** | 0.61 | 12 | 1.00 | 0.40 | 0.30 | -7.0% |
-| 8 | **$CIA** | 0.61 | 8 | 1.00 | 0.40 | 0.30 | -4.3% |
-| 9 | **$QQQM** | 0.61 | 16 | 1.00 | 0.40 | 0.30 | -2.3% |
-| 10 | **$KO** | 0.59 | 25 | 0.86 | 0.40 | 0.45 | -3.2% |
+| 1 | **$AAPL** | 0.48 | 120 | 0.21 | 0.40 | 1.00 | +5.2% |
+| 2 | **$ISRG** | 0.44 | 24 | 0.47 | 0.40 | 0.45 | -15.2% |
+| 3 | **$DTE** | 0.43 | 109 | 0.09 | 0.40 | 1.00 | -1.6% |
+| 4 | **$META** | 0.42 | 91 | 0.42 | 0.40 | 0.45 | -1.6% |
+| 5 | **$SPCX** | 0.41 | 257 | 0.04 | 0.40 | 1.00 | -10.9% |
+| 6 | **$NVDA** | 0.41 | 105 | 0.04 | 0.40 | 1.00 | -0.4% |
+| 7 | **$MU** | 0.39 | 679 | 0.00 | 0.40 | 1.00 | -9.4% |
+| 8 | **$NFLX** | 0.39 | 139 | 0.00 | 0.40 | 1.00 | -6.6% |
+| 9 | **$MSFT** | 0.39 | 100 | 0.00 | 0.40 | 1.00 | +0.7% |
+| 10 | **$AMD** | 0.39 | 70 | 0.00 | 0.40 | 1.00 | -7.2% |
 
 ## Why they're here
-### $VC — Visteon
-- Velocity: 4.5x vs 24h ago (baseline building)
+### $AAPL — Apple
+- Velocity: 1.6x vs 24h ago (baseline building)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
-- 5-day price: +1.3% (chatter building, price relatively quiet)
+- 5-day price: +5.2% (chatter building, price relatively quiet)
 
-### $CRM — Salesforce
-- Velocity: 8.0x vs 24h ago (baseline building)
-- Breadth: in 3 subs incl. small caps
-- Sentiment: no substantive posts found
-- 5-day price: -0.3% (chatter building, price relatively quiet)
-
-### $SGOV — iShares Trust - iShares 0-3 Month Treasury Bond ETF
-- Velocity: 7.0x vs 24h ago (baseline building)
-- Breadth: in 3 subs incl. small caps
-- Sentiment: no substantive posts found
-- 5-day price: +0.1% (chatter building, price relatively quiet)
-
-### $RE — Everest Re
-- Velocity: 4.5x vs 24h ago (baseline building)
-- Breadth: in 2 subs incl. small caps
-- Sentiment: no substantive posts found
-
-### $BATL — Battalion Oil
-- Velocity: 11.0x vs 24h ago (baseline building)
-- Breadth: in 1 subs incl. small caps
-- Sentiment: no substantive posts found
-- 5-day price: -7.9% (chatter building, price relatively quiet)
-
-### $PG — Procter & Gamble
-- Velocity: 10.0x vs 24h ago (baseline building)
+### $ISRG — Intuitive Surgical
+- Velocity: 2.4x vs 24h ago (baseline building)
 - Breadth: in 2 subs
 - Sentiment: no substantive posts found
-- 5-day price: +1.1% (chatter building, price relatively quiet)
+- 5-day price: -15.2% (chatter building, price relatively quiet)
 
-### $TQQQ — ProShares Trust - ProShares UltraPro QQQ
-- Velocity: 4.0x vs 24h ago (baseline building)
-- Breadth: in 2 subs
+### $DTE — DTE Energy
+- Velocity: 1.3x vs 24h ago (baseline building)
+- Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
-- 5-day price: -7.0% (chatter building, price relatively quiet)
+- 5-day price: -1.6% (chatter building, price relatively quiet)
 
-### $CIA — Citizens Inc
-- Velocity: 4.0x vs 24h ago (baseline building)
-- Breadth: in 2 subs
-- Sentiment: no substantive posts found
-- 5-day price: -4.3% (chatter building, price relatively quiet)
-
-### $QQQM — Invesco Exchange-Traded Fund Trust II - Invesco NASDAQ 100 ETF
-- Velocity: 16.0x vs 24h ago (baseline building)
-- Breadth: in 1 subs
-- Sentiment: no substantive posts found
-- 5-day price: -2.3% (chatter building, price relatively quiet)
-
-### $KO — Coca-Cola
-- Velocity: 3.6x vs 24h ago (baseline building)
+### $META — Meta Platforms (Facebook)
+- Velocity: 2.3x vs 24h ago (baseline building)
 - Breadth: in 3 subs
 - Sentiment: no substantive posts found
-- 5-day price: -3.2% (chatter building, price relatively quiet)
+- 5-day price: -1.6% (chatter building, price relatively quiet)
+
+### $SPCX — SpaceX
+- Velocity: 1.1x vs 24h ago (baseline building)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: -10.9% (chatter building, price relatively quiet)
+
+### $NVDA — NVIDIA
+- Velocity: 1.1x vs 24h ago (baseline building)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: -0.4% (chatter building, price relatively quiet)
+
+### $MU — Micron Technology
+- Velocity: 0.8x vs 24h ago (baseline building)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: -9.4% (chatter building, price relatively quiet)
+
+### $NFLX — Netflix
+- Velocity: 0.4x vs 24h ago (baseline building)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: -6.6% (chatter building, price relatively quiet)
+
+### $MSFT — Microsoft
+- Velocity: 0.4x vs 24h ago (baseline building)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: +0.7% (chatter building, price relatively quiet)
+
+### $AMD — AMD
+- Velocity: 0.8x vs 24h ago (baseline building)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: -7.2% (chatter building, price relatively quiet)
