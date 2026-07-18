@@ -3,52 +3,62 @@
 {
 "ticker": "SLS",
 "price": 13.19,
-"composite": 0.537
-},
-{
-"ticker": "META",
-"price": 646.01,
-"composite": 0.42
-},
-{
-"ticker": "TE",
-"price": 5.84,
-"composite": 0.417
+"composite": 0.555,
+"setup": "EARLY"
 },
 {
 "ticker": "USO",
 "price": 123.96,
-"composite": 0.415
+"composite": 0.448,
+"setup": "EARLY"
 },
 {
-"ticker": "NVDA",
-"price": 202.81,
-"composite": 0.396
+"ticker": "META",
+"price": 646.01,
+"composite": 0.42,
+"setup": "NOISE"
+},
+{
+"ticker": "TE",
+"price": 5.84,
+"composite": 0.417,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "OS",
+"price": null,
+"composite": 0.417,
+"setup": "EARLY"
+},
+{
+"ticker": "HBM",
+"price": 20.36,
+"composite": 0.413,
+"setup": "NOISE"
 },
 {
 "ticker": "MU",
 "price": 848.95,
-"composite": 0.39
+"composite": 0.39,
+"setup": "NOISE"
 },
 {
 "ticker": "SPCX",
 "price": 123.99,
-"composite": 0.39
+"composite": 0.39,
+"setup": "NOISE"
 },
 {
 "ticker": "NFLX",
 "price": 68.95,
-"composite": 0.39
+"composite": 0.39,
+"setup": "NOISE"
 },
 {
 "ticker": "MSFT",
 "price": 393.82,
-"composite": 0.39
-},
-{
-"ticker": "AAPL",
-"price": 333.74,
-"composite": 0.39
+"composite": 0.39,
+"setup": "NOISE"
 }
 ]
 }
