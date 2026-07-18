@@ -239,12 +239,13 @@ def breadth_score(e: dict) -> tuple[float, str]:
     return score, f"in {n} subs" + (" incl. small caps" if small_bonus else "")
 
 
-def sentiment_score(ticker: str, posts: list[dict]) -> tuple[float, str]:
-    """Claude scores bullishness + substance of top posts. Neutral if unavailable."""
+def sentiment_score(ticker: str, posts: list[dict]) -> tuple[float, str, str]:
+    """Claude scores bullishness + substance and flags binary catalysts.
+    Returns (score, note, catalyst). Neutral if unavailable."""
     if not posts:
-        return 0.4, "no substantive posts found"
+        return 0.4, "no substantive posts found", ""
     if not ANTHROPIC_API_KEY:
-        return 0.5, "sentiment skipped (no API key)"
+        return 0.5, "sentiment skipped (no API key)", ""
 
     digest = "\n---\n".join(
         f"[r/{p['subreddit']}, {p['score']} upvotes] {p['title']}\n{p['text']}" for p in posts
@@ -253,7 +254,10 @@ def sentiment_score(ticker: str, posts: list[dict]) -> tuple[float, str]:
         f"You are scoring Reddit chatter about the stock ${ticker} for a momentum screener.\n"
         f"Posts from the last 24h:\n{digest}\n\n"
         "Respond ONLY with JSON, no markdown: "
-        '{"bullishness": 0.0-1.0, "substance": 0.0-1.0, "summary": "<12 words max>"}. '
+        '{"bullishness": 0.0-1.0, "substance": 0.0-1.0, "summary": "<12 words max>", '
+        '"catalyst": "<if the discussion centers on a specific upcoming binary event '
+        "(trial readout, FDA date, earnings, court ruling, merger vote), name it in "
+        '<8 words; otherwise empty string>"}. '
         "bullishness = how positive the crowd is. substance = quality of reasoning "
         "(real DD/catalysts score high; pure emoji hype or pump language scores low)."
     )
@@ -267,7 +271,7 @@ def sentiment_score(ticker: str, posts: list[dict]) -> tuple[float, str]:
             },
             json={
                 "model": CLAUDE_MODEL,
-                "max_tokens": 200,
+                "max_tokens": 250,
                 "messages": [{"role": "user", "content": prompt}],
             },
             timeout=60,
@@ -277,10 +281,10 @@ def sentiment_score(ticker: str, posts: list[dict]) -> tuple[float, str]:
         parsed = json.loads(re.sub(r"```(json)?", "", text).strip())
         bull, subst = float(parsed["bullishness"]), float(parsed["substance"])
         score = bull * 0.5 + subst * 0.5  # hype without substance gets dragged down
-        return round(score, 2), parsed.get("summary", "")
+        return round(score, 2), parsed.get("summary", ""), str(parsed.get("catalyst", "") or "")
     except Exception as exc:  # noqa: BLE001
         print(f"[warn] sentiment failed for {ticker}: {exc}")
-        return 0.5, "sentiment unavailable"
+        return 0.5, "sentiment unavailable", ""
 
 
 PICKS_FILE = Path("data/picks.json")
@@ -317,24 +321,27 @@ def evaluate_picks(picks: dict, today: str) -> None:
 
 def record_picks(picks: dict, today: str, ranked: list[dict]) -> None:
     picks[today] = [
-        {"ticker": r["ticker"], "price": r.get("price_now"), "composite": r["composite"]}
+        {"ticker": r["ticker"], "price": r.get("price_now"), "composite": r["composite"],
+         "setup": r.get("setup", "")}
         for r in ranked
     ]
 
 
 def build_scoreboard(picks: dict, today: str) -> tuple[list[list[str]], str | None]:
-    """Recent evaluated picks + running aggregate stats."""
-    rows, all_3d = [], []
+    """Recent evaluated picks + running aggregate stats, broken down by setup label."""
+    rows, all_3d, by_label = [], [], {}
     for date_str in sorted(picks.keys(), reverse=True):
         if date_str == today:
             continue
         for e in picks[date_str]:
+            label = e.get("setup", "") or "?"
             if "ret_3d" in e:
                 all_3d.append(e["ret_3d"])
+                by_label.setdefault(label, []).append(e["ret_3d"])
             if "ret_3d" in e or "ret_7d" in e:
                 r3 = f"{e['ret_3d']:+.1f}%" if "ret_3d" in e else "-"
                 r7 = f"{e['ret_7d']:+.1f}%" if "ret_7d" in e else "-"
-                rows.append([date_str, f"${e['ticker']}", f"{e['composite']:.2f}", r3, r7])
+                rows.append([date_str, f"${e['ticker']}", label, f"{e['composite']:.2f}", r3, r7])
     rows = rows[:15]
     summary = None
     if all_3d:
@@ -342,7 +349,55 @@ def build_scoreboard(picks: dict, today: str) -> tuple[list[list[str]], str | No
         summary = (f"Across {len(all_3d)} evaluated picks: average 3-day return "
                    f"{statistics.mean(all_3d):+.1f}%, {wins}/{len(all_3d)} positive "
                    f"({wins / len(all_3d) * 100:.0f}% hit rate).")
+        label_bits = [
+            f"{label}: {statistics.mean(rets):+.1f}% avg over {len(rets)}"
+            for label, rets in sorted(by_label.items()) if len(rets) >= 3 and label != "?"
+        ]
+        if label_bits:
+            summary += " By setup — " + "; ".join(label_bits) + "."
     return rows, summary
+
+
+# ---------------------------------------------------------------- setup labels
+
+def classify_setup(r: dict) -> tuple[str, float, str]:
+    """Best hypothesis about what KIND of situation this is — not a buy/sell call.
+
+    EARLY          chatter accelerating, price hasn't moved (the profile worth researching)
+    EVENT GAMBLE   attention clustering around a known binary catalyst (coin flip, not momentum)
+    CROWD REACTION chatter chasing a price move that already happened
+    FADING         yesterday's story losing steam
+    NOISE          background hum / mixed signals
+    """
+    vel, brd = r["velocity"], r["breadth"]
+    p5 = r.get("price_5d")
+    catalyst = r.get("catalyst", "")
+    trend = r.get("trend_ratio")  # today's mentions / yesterday's, when known
+
+    if catalyst:
+        conf = min(0.9, 0.5 + r.get("sentiment", 0.5) * 0.4)
+        return "EVENT GAMBLE", round(conf, 2), f"binary catalyst ahead: {catalyst}"
+
+    if trend is not None and trend < 0.8 and vel < 0.4:
+        conf = min(0.8, 0.5 + (0.8 - trend))
+        return "FADING", round(conf, 2), f"mentions down to {trend:.1f}x of yesterday"
+
+    if p5 is not None and abs(p5) >= 10 and vel >= 0.3:
+        direction = "up" if p5 > 0 else "down"
+        conf = min(0.85, 0.45 + vel * 0.4)
+        return "CROWD REACTION", round(conf, 2), f"chatter chasing a {p5:+.1f}% move already {direction}"
+
+    if vel >= 0.5 and brd >= 0.4 and (p5 is None or abs(p5) < 5):
+        conf = min(0.9, 0.35 + vel * 0.35 + brd * 0.2)
+        return "EARLY", round(conf, 2), "chatter accelerating while price is still quiet"
+
+    if vel >= 0.5 and (p5 is None or abs(p5) < 10):
+        return "EARLY", 0.5, "chatter accelerating, but confined to few subs so far"
+
+    if vel < 0.2 and brd >= 0.7:
+        return "NOISE", 0.7, "high visibility, no spike — background mega-cap hum"
+
+    return "NOISE", 0.4, "mixed signals, nothing decisive"
 
 
 # ---------------------------------------------------------------- report
@@ -378,19 +433,26 @@ def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: 
     rows = []
     for i, r in enumerate(ranked, 1):
         price = f"{r['price_5d']:+.1f}%" if r["price_5d"] is not None else "-"
+        setup = f"{r['setup']} ({r['setup_conf']:.1f})" if r.get("setup") else "-"
         rows.append([
-            str(i), f"**${r['ticker']}**", f"{r['composite']:.2f}", str(r["mentions"]),
+            str(i), f"**${r['ticker']}**", setup, f"{r['composite']:.2f}", str(r["mentions"]),
             f"{r['velocity']:.2f}", f"{r['sentiment']:.2f}", f"{r['breadth']:.2f}", price,
         ])
     lines.extend(format_table(
-        ["#", "Ticker", "Score", "Mentions", "Velocity", "Sentiment", "Breadth", "5d price"],
+        ["#", "Ticker", "Setup", "Score", "Mentions", "Velocity", "Sentiment", "Breadth", "5d price"],
         rows,
     ))
+    lines.append("")
+    lines.append("*Setup labels are hypotheses about the situation type, not buy/sell advice: "
+                 "EARLY = chatter building before price; CROWD REACTION = chatter chasing a move; "
+                 "EVENT GAMBLE = binary catalyst ahead; FADING = losing steam; NOISE = background hum.*")
     lines.append("")
 
     lines.append("## Why they're here")
     for r in ranked:
         lines.append(f"### ${r['ticker']} — {r.get('name', '')}")
+        if r.get("setup"):
+            lines.append(f"- **Hypothesis: {r['setup']} ({r['setup_conf']:.1f})** — {r['setup_reason']}")
         lines.append(f"- Velocity: {r['velocity_note']}")
         lines.append(f"- Breadth: {r['breadth_note']}")
         lines.append(f"- Sentiment: {r['sentiment_note']}")
@@ -414,7 +476,7 @@ def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: 
             lines.append(f"*{score_summary}*")
             lines.append("")
         lines.extend(format_table(
-            ["Pick date", "Ticker", "Score", "3d return", "7d return"], score_rows,
+            ["Pick date", "Ticker", "Setup", "Score", "3d return", "7d return"], score_rows,
         ))
         lines.append("")
 
@@ -466,15 +528,23 @@ def main() -> int:
                 reverse=True)
     candidates = scored[:TOP_CANDIDATES]
 
+    yesterday_mentions = {}
+    past_dates = sorted(history.keys())
+    if past_dates:
+        yesterday_mentions = history[past_dates[-1]]
+
     for r in candidates:
         r["posts"] = fetch_reddit_posts(r["ticker"])
         time.sleep(2)  # respect Reddit's unauthenticated rate limits
-        r["sentiment"], r["sentiment_note"] = sentiment_score(r["ticker"], r["posts"])
+        r["sentiment"], r["sentiment_note"], r["catalyst"] = sentiment_score(r["ticker"], r["posts"])
         r["price_5d"], r["price_now"] = fetch_price_data(r["ticker"])
+        prev = yesterday_mentions.get(r["ticker"])
+        r["trend_ratio"] = round(r["mentions"] / prev, 2) if prev else None
         r["composite"] = round(
             r["velocity"] * WEIGHTS["velocity"]
             + r["sentiment"] * WEIGHTS["sentiment"]
             + r["breadth"] * WEIGHTS["breadth"], 3)
+        r["setup"], r["setup_conf"], r["setup_reason"] = classify_setup(r)
 
     candidates.sort(key=lambda r: r["composite"], reverse=True)
     ranked = candidates[:DIGEST_SIZE]
