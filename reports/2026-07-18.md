@@ -7,15 +7,15 @@
 | #  | Ticker    | Setup                | Score | Mentions | Velocity | Sentiment | Breadth | 5d price |
 |----|-----------|----------------------|-------|----------|----------|-----------|---------|----------|
 | 1  | **$SLS**  | EARLY (0.7)          | 0.56  | 16       | 0.60     | 0.40      | 0.70    | +4.5%    |
-| 2  | **$USO**  | EARLY (0.5)          | 0.45  | 22       | 0.58     | 0.40      | 0.30    | +5.2%    |
-| 3  | **$META** | NOISE (0.4)          | 0.42  | 92       | 0.32     | 0.40      | 0.60    | -1.6%    |
+| 2  | **$USO**  | EARLY (0.5)          | 0.46  | 23       | 0.60     | 0.40      | 0.30    | +5.2%    |
+| 3  | **$META** | NOISE (0.4)          | 0.42  | 92       | 0.33     | 0.40      | 0.60    | -1.6%    |
 | 4  | **$TE**   | CROWD REACTION (0.7) | 0.42  | 19       | 0.60     | 0.40      | 0.15    | -10.8%   |
-| 5  | **$OS**   | EARLY (0.5)          | 0.42  | 22       | 0.60     | 0.40      | 0.15    | -        |
-| 6  | **$HBM**  | NOISE (0.4)          | 0.41  | 22       | 0.40     | 0.40      | 0.45    | -2.4%    |
-| 7  | **$MU**   | NOISE (0.7)          | 0.39  | 629      | 0.00     | 0.40      | 1.00    | -9.4%    |
-| 8  | **$SPCX** | NOISE (0.7)          | 0.39  | 230      | 0.00     | 0.40      | 1.00    | -10.9%   |
-| 9  | **$NFLX** | NOISE (0.7)          | 0.39  | 107      | 0.00     | 0.40      | 1.00    | -6.6%    |
-| 10 | **$MSFT** | NOISE (0.7)          | 0.39  | 102      | 0.00     | 0.40      | 1.00    | +0.7%    |
+| 5  | **$MU**   | NOISE (0.7)          | 0.39  | 619      | 0.00     | 0.40      | 1.00    | -9.4%    |
+| 6  | **$SPCX** | NOISE (0.7)          | 0.39  | 227      | 0.00     | 0.40      | 1.00    | -10.9%   |
+| 7  | **$NFLX** | NOISE (0.7)          | 0.39  | 106      | 0.00     | 0.40      | 1.00    | -6.6%    |
+| 8  | **$MSFT** | NOISE (0.7)          | 0.39  | 101      | 0.00     | 0.40      | 1.00    | +0.7%    |
+| 9  | **$NVDA** | NOISE (0.7)          | 0.39  | 93       | 0.00     | 0.40      | 1.00    | -0.4%    |
+| 10 | **$AAPL** | NOISE (0.7)          | 0.39  | 71       | 0.00     | 0.40      | 1.00    | +5.2%    |
 
 *Setup labels are hypotheses about the situation type, not buy/sell advice: EARLY = chatter building before price; CROWD REACTION = chatter chasing a move; EVENT GAMBLE = binary catalyst ahead; FADING = losing steam; NOISE = background hum.*
 
@@ -28,14 +28,14 @@
 ## Why they're here
 ### $SLS — Sellas Life Sciences
 - **Hypothesis: EARLY (0.7)** — chatter accelerating while price is still quiet
-- Velocity: 3.2x vs 24h ago (baseline building)
+- Velocity: 4.0x vs 24h ago (baseline building)
 - Breadth: in 3 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: +4.5% (chatter building, price relatively quiet)
 
 ### $USO — United States Commodity Funds LLC - United States Oil Fund
 - **Hypothesis: EARLY (0.5)** — chatter accelerating, but confined to few subs so far
-- Velocity: 2.8x vs 24h ago (baseline building)
+- Velocity: 2.9x vs 24h ago (baseline building)
 - Breadth: in 2 subs
 - Sentiment: no substantive posts found
 - 5-day price: +5.2% (chatter building, price relatively quiet)
@@ -53,19 +53,6 @@
 - Breadth: in 1 subs
 - Sentiment: no substantive posts found
 - 5-day price: -10.8% (price already moved — crowd may be reacting)
-
-### $OS — OneStream
-- **Hypothesis: EARLY (0.5)** — chatter accelerating, but confined to few subs so far
-- Velocity: 11.0x vs 24h ago (baseline building)
-- Breadth: in 1 subs
-- Sentiment: no substantive posts found
-
-### $HBM — Hudbay Minerals
-- **Hypothesis: NOISE (0.4)** — mixed signals, nothing decisive
-- Velocity: 2.2x vs 24h ago (baseline building)
-- Breadth: in 2 subs
-- Sentiment: no substantive posts found
-- 5-day price: -2.4% (chatter building, price relatively quiet)
 
 ### $MU — Micron Technology
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
@@ -94,3 +81,17 @@
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: +0.7% (chatter building, price relatively quiet)
+
+### $NVDA — NVIDIA
+- **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
+- Velocity: 0.9x vs 24h ago (baseline building)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: -0.4% (chatter building, price relatively quiet)
+
+### $AAPL — Apple
+- **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
+- Velocity: 0.6x vs 24h ago (baseline building)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: +5.2% (chatter building, price relatively quiet)

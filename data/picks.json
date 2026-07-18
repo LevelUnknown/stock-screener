@@ -9,13 +9,13 @@
 {
 "ticker": "USO",
 "price": 123.96,
-"composite": 0.448,
+"composite": 0.455,
 "setup": "EARLY"
 },
 {
 "ticker": "META",
 "price": 646.01,
-"composite": 0.418,
+"composite": 0.423,
 "setup": "NOISE"
 },
 {
@@ -23,18 +23,6 @@
 "price": 5.84,
 "composite": 0.417,
 "setup": "CROWD REACTION"
-},
-{
-"ticker": "OS",
-"price": null,
-"composite": 0.417,
-"setup": "EARLY"
-},
-{
-"ticker": "HBM",
-"price": 20.36,
-"composite": 0.413,
-"setup": "NOISE"
 },
 {
 "ticker": "MU",
@@ -57,6 +45,18 @@
 {
 "ticker": "MSFT",
 "price": 393.82,
+"composite": 0.39,
+"setup": "NOISE"
+},
+{
+"ticker": "NVDA",
+"price": 202.81,
+"composite": 0.39,
+"setup": "NOISE"
+},
+{
+"ticker": "AAPL",
+"price": 333.74,
 "composite": 0.39,
 "setup": "NOISE"
 }
