@@ -8,16 +8,22 @@
 |----|-----------|----------------------|-------|----------|----------|-----------|---------|----------|
 | 1  | **$SLS**  | EARLY (0.7)          | 0.56  | 16       | 0.60     | 0.40      | 0.70    | +4.5%    |
 | 2  | **$USO**  | EARLY (0.5)          | 0.45  | 22       | 0.58     | 0.40      | 0.30    | +5.2%    |
-| 3  | **$META** | NOISE (0.4)          | 0.42  | 93       | 0.33     | 0.40      | 0.60    | -1.6%    |
+| 3  | **$META** | NOISE (0.4)          | 0.42  | 92       | 0.32     | 0.40      | 0.60    | -1.6%    |
 | 4  | **$TE**   | CROWD REACTION (0.7) | 0.42  | 19       | 0.60     | 0.40      | 0.15    | -10.8%   |
 | 5  | **$OS**   | EARLY (0.5)          | 0.42  | 22       | 0.60     | 0.40      | 0.15    | -        |
 | 6  | **$HBM**  | NOISE (0.4)          | 0.41  | 22       | 0.40     | 0.40      | 0.45    | -2.4%    |
-| 7  | **$MU**   | NOISE (0.7)          | 0.39  | 633      | 0.00     | 0.40      | 1.00    | -9.4%    |
-| 8  | **$SPCX** | NOISE (0.7)          | 0.39  | 231      | 0.00     | 0.40      | 1.00    | -10.9%   |
+| 7  | **$MU**   | NOISE (0.7)          | 0.39  | 629      | 0.00     | 0.40      | 1.00    | -9.4%    |
+| 8  | **$SPCX** | NOISE (0.7)          | 0.39  | 230      | 0.00     | 0.40      | 1.00    | -10.9%   |
 | 9  | **$NFLX** | NOISE (0.7)          | 0.39  | 107      | 0.00     | 0.40      | 1.00    | -6.6%    |
 | 10 | **$MSFT** | NOISE (0.7)          | 0.39  | 102      | 0.00     | 0.40      | 1.00    | +0.7%    |
 
 *Setup labels are hypotheses about the situation type, not buy/sell advice: EARLY = chatter building before price; CROWD REACTION = chatter chasing a move; EVENT GAMBLE = binary catalyst ahead; FADING = losing steam; NOISE = background hum.*
+
+## My watchlist
+### $SKHY — SK Hynix
+- Mentions: 0 (yesterday: 0) — **quiet**
+- Price: +1.1% (5d), last $154.03
+- No posts retrieved (Reddit access pending or genuinely quiet)
 
 ## Why they're here
 ### $SLS — Sellas Life Sciences
@@ -63,7 +69,7 @@
 
 ### $MU — Micron Technology
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: 0.8x vs 24h ago (baseline building)
+- Velocity: 0.7x vs 24h ago (baseline building)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: -9.4% (chatter building, price relatively quiet)
