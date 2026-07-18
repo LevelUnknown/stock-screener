@@ -322,7 +322,7 @@ def record_picks(picks: dict, today: str, ranked: list[dict]) -> None:
     ]
 
 
-def build_scoreboard(picks: dict, today: str) -> tuple[list[str], str | None]:
+def build_scoreboard(picks: dict, today: str) -> tuple[list[list[str]], str | None]:
     """Recent evaluated picks + running aggregate stats."""
     rows, all_3d = [], []
     for date_str in sorted(picks.keys(), reverse=True):
@@ -332,9 +332,9 @@ def build_scoreboard(picks: dict, today: str) -> tuple[list[str], str | None]:
             if "ret_3d" in e:
                 all_3d.append(e["ret_3d"])
             if "ret_3d" in e or "ret_7d" in e:
-                r3 = f"{e['ret_3d']:+.1f}%" if "ret_3d" in e else "–"
-                r7 = f"{e['ret_7d']:+.1f}%" if "ret_7d" in e else "–"
-                rows.append(f"| {date_str} | ${e['ticker']} | {e['composite']:.2f} | {r3} | {r7} |")
+                r3 = f"{e['ret_3d']:+.1f}%" if "ret_3d" in e else "-"
+                r7 = f"{e['ret_7d']:+.1f}%" if "ret_7d" in e else "-"
+                rows.append([date_str, f"${e['ticker']}", f"{e['composite']:.2f}", r3, r7])
     rows = rows[:15]
     summary = None
     if all_3d:
@@ -347,8 +347,22 @@ def build_scoreboard(picks: dict, today: str) -> tuple[list[str], str | None]:
 
 # ---------------------------------------------------------------- report
 
+def format_table(headers: list[str], rows: list[list[str]]) -> list[str]:
+    """Markdown table with padded cells so columns align in raw text too."""
+    widths = [
+        max(len(headers[i]), *(len(r[i]) for r in rows)) if rows else len(headers[i])
+        for i in range(len(headers))
+    ]
+
+    def fmt(cells: list[str]) -> str:
+        return "| " + " | ".join(c.ljust(w) for c, w in zip(cells, widths)) + " |"
+
+    sep = "|" + "|".join("-" * (w + 2) for w in widths) + "|"
+    return [fmt(headers), sep] + [fmt(r) for r in rows]
+
+
 def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: list[dict],
-                 score_rows: list[str] | None = None, score_summary: str | None = None) -> str:
+                 score_rows: list[list[str]] | None = None, score_summary: str | None = None) -> str:
     lines = [f"# Reddit momentum digest — {today}", ""]
     lines.append("*Idea-surfacing only — not financial advice. Verify everything before trading.*")
     lines.append("")
@@ -361,14 +375,17 @@ def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: 
 
     lines.append("## Top tickers by composite score")
     lines.append("")
-    lines.append("| # | Ticker | Score | Mentions | Velocity | Sentiment | Breadth | 5d price |")
-    lines.append("|---|--------|-------|----------|----------|-----------|---------|----------|")
+    rows = []
     for i, r in enumerate(ranked, 1):
-        price = f"{r['price_5d']:+.1f}%" if r["price_5d"] is not None else "–"
-        lines.append(
-            f"| {i} | **${r['ticker']}** | {r['composite']:.2f} | {r['mentions']} "
-            f"| {r['velocity']:.2f} | {r['sentiment']:.2f} | {r['breadth']:.2f} | {price} |"
-        )
+        price = f"{r['price_5d']:+.1f}%" if r["price_5d"] is not None else "-"
+        rows.append([
+            str(i), f"**${r['ticker']}**", f"{r['composite']:.2f}", str(r["mentions"]),
+            f"{r['velocity']:.2f}", f"{r['sentiment']:.2f}", f"{r['breadth']:.2f}", price,
+        ])
+    lines.extend(format_table(
+        ["#", "Ticker", "Score", "Mentions", "Velocity", "Sentiment", "Breadth", "5d price"],
+        rows,
+    ))
     lines.append("")
 
     lines.append("## Why they're here")
@@ -396,9 +413,9 @@ def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: 
         if score_summary:
             lines.append(f"*{score_summary}*")
             lines.append("")
-        lines.append("| Pick date | Ticker | Score | 3d return | 7d return |")
-        lines.append("|-----------|--------|-------|-----------|-----------|")
-        lines.extend(score_rows)
+        lines.extend(format_table(
+            ["Pick date", "Ticker", "Score", "3d return", "7d return"], score_rows,
+        ))
         lines.append("")
 
     return "\n".join(lines)
