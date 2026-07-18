@@ -43,10 +43,28 @@ WEIGHTS = {"velocity": 0.40, "sentiment": 0.35, "breadth": 0.25}
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 CLAUDE_MODEL = "claude-sonnet-4-6"
 
-USER_AGENT = "momentum-scanner/1.0 (personal research tool)"
+REDDIT_CLIENT_ID = os.environ.get("REDDIT_CLIENT_ID", "")
+REDDIT_CLIENT_SECRET = os.environ.get("REDDIT_CLIENT_SECRET", "")
 
-# Common words that ApeWisdom occasionally misreads as tickers
-TICKER_BLACKLIST = {"DD", "CEO", "IPO", "YOLO", "ATH", "EPS", "PT", "IT", "ALL", "ON", "A", "I"}
+USER_AGENT = "windows:momentum-scanner:v1.1 (personal research tool)"
+
+MIN_MENTIONS = 15          # ignore tickers below this — single-digit counts are noise
+
+# Common words / dead tickers that ApeWisdom misreads as stock symbols
+TICKER_BLACKLIST = {
+    "DD", "CEO", "IPO", "YOLO", "ATH", "EPS", "PT", "IT", "ALL", "ON", "A", "I",
+    "RE", "VC", "CIA", "EOD", "USA", "IRS", "ETF", "AI", "EV", "GDP", "CPI",
+    "FOMO", "OTM", "ITM", "IV", "PE", "APE", "BE", "GO", "SO", "OR", "AN", "BY",
+}
+
+# ETFs, funds, and defensive mega-caps — mentioned constantly in portfolio talk,
+# never "momentum spike" material. Remove entries here if you want them back.
+EXCLUDED_TICKERS = {
+    "SPY", "QQQ", "QQQM", "TQQQ", "SQQQ", "VOO", "VTI", "VT", "IWM", "DIA",
+    "SGOV", "JEPI", "JEPQ", "SCHD", "SCHG", "VYM", "VUG", "VGT", "SPLG", "IVV",
+    "SOXL", "SOXS", "UPRO", "TLT", "GLD", "SLV", "BND", "ARKK", "SMH", "XLK",
+    "KO", "PG", "JNJ", "WMT", "PEP", "MCD", "V", "MA", "BRK.B", "BRK.A",
+}
 
 
 # ---------------------------------------------------------------- data pull
@@ -71,7 +89,8 @@ def collect_mentions() -> dict:
         time.sleep(1)  # be polite
         for row in rows:
             sym = row.get("ticker", "").upper().strip()
-            if not sym or sym in TICKER_BLACKLIST or not re.fullmatch(r"[A-Z.]{1,6}", sym):
+            if (not sym or sym in TICKER_BLACKLIST or sym in EXCLUDED_TICKERS
+                    or not re.fullmatch(r"[A-Z.]{1,6}", sym)):
                 continue
             entry = tickers.setdefault(sym, {
                 "name": row.get("name", ""),
@@ -97,14 +116,43 @@ def collect_mentions() -> dict:
     return tickers
 
 
+_reddit_token: str | None = None
+
+
+def get_reddit_token() -> str | None:
+    """App-only OAuth token (client_credentials). Returns None if creds missing."""
+    global _reddit_token
+    if _reddit_token or not (REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET):
+        return _reddit_token
+    try:
+        resp = requests.post(
+            "https://www.reddit.com/api/v1/access_token",
+            auth=(REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET),
+            data={"grant_type": "client_credentials"},
+            headers={"User-Agent": USER_AGENT},
+            timeout=30,
+        )
+        resp.raise_for_status()
+        _reddit_token = resp.json()["access_token"]
+        print("[info] Reddit OAuth authenticated.")
+    except Exception as exc:  # noqa: BLE001
+        print(f"[warn] Reddit OAuth failed, falling back to public API: {exc}")
+    return _reddit_token
+
+
 def fetch_reddit_posts(ticker: str, limit: int = 3) -> list[dict]:
-    """Pull today's top posts mentioning the ticker via Reddit's public JSON."""
+    """Pull today's top posts mentioning the ticker. Uses OAuth if configured."""
+    token = get_reddit_token()
+    base = "https://oauth.reddit.com" if token else "https://www.reddit.com"
+    headers = {"User-Agent": USER_AGENT}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
     url = (
-        "https://www.reddit.com/r/wallstreetbets+stocks+pennystocks+options+smallstreetbets"
+        f"{base}/r/wallstreetbets+stocks+pennystocks+options+smallstreetbets"
         f"/search.json?q={ticker}&restrict_sr=1&sort=top&t=day&limit={limit}"
     )
     try:
-        resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=30)
+        resp = requests.get(url, headers=headers, timeout=30)
         resp.raise_for_status()
         posts = []
         for child in resp.json().get("data", {}).get("children", []):
@@ -163,11 +211,14 @@ def velocity_score(sym: str, today_mentions: int, e: dict, history: dict) -> tup
         pct = ((today_mentions - mean) / mean * 100) if mean else 0
         note = f"{z:+.1f}σ vs {len(series)}d baseline ({pct:+.0f}%)"
     else:
-        # Bootstrap mode: compare vs 24h ago until we have enough history
+        # Bootstrap mode: compare vs 24h ago until we have enough history.
+        # Capped at 0.6 so warm-up scores can't dominate the composite.
         prev = e.get("mentions_24h_ago", 0)
-        ratio = today_mentions / prev if prev else (2.0 if today_mentions >= 10 else 1.0)
+        ratio = today_mentions / prev if prev else 1.0
         z = min((ratio - 1) * 2, 8.0)
         note = f"{ratio:.1f}x vs 24h ago (baseline building)"
+        score = max(0.0, min(0.6, z / 6.0))
+        return score, note, 0.0
     score = max(0.0, min(1.0, z / 6.0))  # z of 6+ saturates
     return score, note, z if len(series) >= BASELINE_MIN_DAYS else 0.0
 
@@ -306,7 +357,7 @@ def main() -> int:
     # Score everything on velocity + breadth first (cheap), then sentiment on top N
     scored = []
     for sym, e in tickers.items():
-        if e["mentions"] < 5:
+        if e["mentions"] < MIN_MENTIONS:
             continue
         vel, vel_note, z = velocity_score(sym, e["mentions"], e, history)
         brd, brd_note = breadth_score(e)
