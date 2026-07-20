@@ -60,5 +60,67 @@
 "composite": 0.39,
 "setup": "NOISE"
 }
+],
+"2026-07-20": [
+{
+"ticker": "MSFT",
+"price": 393.82,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "IBM",
+"price": 212.67,
+"composite": 0.471,
+"setup": "FADING"
+},
+{
+"ticker": "ASTS",
+"price": 57.8,
+"composite": 0.461,
+"setup": "FADING"
+},
+{
+"ticker": "IREN",
+"price": 33.62,
+"composite": 0.455,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "USO",
+"price": 123.96,
+"composite": 0.455,
+"setup": "EARLY"
+},
+{
+"ticker": "SNAP",
+"price": 4.53,
+"composite": 0.455,
+"setup": "EARLY"
+},
+{
+"ticker": "TSLA",
+"price": 380.84,
+"composite": 0.452,
+"setup": "FADING"
+},
+{
+"ticker": "MU",
+"price": 848.95,
+"composite": 0.44,
+"setup": "FADING"
+},
+{
+"ticker": "AM",
+"price": 22.59,
+"composite": 0.434,
+"setup": "NOISE"
+},
+{
+"ticker": "GOOG",
+"price": 346.12,
+"composite": 0.432,
+"setup": "FADING"
+}
 ]
 }
