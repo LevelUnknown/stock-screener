@@ -4,61 +4,71 @@
 "ticker": "SLS",
 "price": 13.19,
 "composite": 0.555,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": -5.4
 },
 {
 "ticker": "USO",
 "price": 123.96,
 "composite": 0.455,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": 1.3
 },
 {
 "ticker": "META",
 "price": 646.01,
 "composite": 0.423,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": -0.0
 },
 {
 "ticker": "TE",
 "price": 5.84,
 "composite": 0.417,
-"setup": "CROWD REACTION"
+"setup": "CROWD REACTION",
+"ret_3d": 3.3
 },
 {
 "ticker": "MU",
 "price": 848.95,
 "composite": 0.39,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": 1.9
 },
 {
 "ticker": "SPCX",
 "price": 123.99,
 "composite": 0.39,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": -3.3
 },
 {
 "ticker": "NFLX",
 "price": 68.95,
 "composite": 0.39,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": -2.0
 },
 {
 "ticker": "MSFT",
 "price": 393.82,
 "composite": 0.39,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": 2.2
 },
 {
 "ticker": "NVDA",
 "price": 202.81,
 "composite": 0.39,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": 0.2
 },
 {
 "ticker": "AAPL",
 "price": 333.74,
 "composite": 0.39,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": -2.1
 }
 ],
 "2026-07-20": [
@@ -121,6 +131,68 @@
 "price": 346.12,
 "composite": 0.432,
 "setup": "FADING"
+}
+],
+"2026-07-21": [
+{
+"ticker": "MSFT",
+"price": 402.29,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "TSLA",
+"price": 369.57,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "AMD",
+"price": 503.57,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "NVDA",
+"price": 203.28,
+"composite": 0.621,
+"setup": "EARLY"
+},
+{
+"ticker": "MU",
+"price": 865.46,
+"composite": 0.615,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "SPCX",
+"price": 119.85,
+"composite": 0.593,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "NOW",
+"price": 104.7,
+"composite": 0.593,
+"setup": "EARLY"
+},
+{
+"ticker": "AAPL",
+"price": 326.59,
+"composite": 0.579,
+"setup": "NOISE"
+},
+{
+"ticker": "INTC",
+"price": 97.06,
+"composite": 0.557,
+"setup": "NOISE"
+},
+{
+"ticker": "IBM",
+"price": 213.0,
+"composite": 0.53,
+"setup": "NOISE"
 }
 ]
 }
