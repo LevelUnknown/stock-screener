@@ -194,5 +194,67 @@
 "composite": 0.53,
 "setup": "NOISE"
 }
+],
+"2026-07-22": [
+{
+"ticker": "SMCI",
+"price": 25.5,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "AMZN",
+"price": 247.55,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "CC",
+"price": 17.92,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "AVGO",
+"price": 386.5,
+"composite": 0.593,
+"setup": "EARLY"
+},
+{
+"ticker": "IP",
+"price": 36.35,
+"composite": 0.593,
+"setup": "EARLY"
+},
+{
+"ticker": "GOOG",
+"price": 346.19,
+"composite": 0.59,
+"setup": "EARLY"
+},
+{
+"ticker": "NOW",
+"price": 102.06,
+"composite": 0.548,
+"setup": "NOISE"
+},
+{
+"ticker": "NFLX",
+"price": 68.67,
+"composite": 0.529,
+"setup": "NOISE"
+},
+{
+"ticker": "MU",
+"price": 970.82,
+"composite": 0.503,
+"setup": "NOISE"
+},
+{
+"ticker": "INTC",
+"price": 105.45,
+"composite": 0.465,
+"setup": "NOISE"
+}
 ]
 }
