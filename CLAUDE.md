@@ -8,8 +8,11 @@ keep deploys simple, and never assume unstated git knowledge.
 ## Architecture
 
 - `scanner.py` — the entire agent. Runs once daily via GitHub Actions.
-- `.github/workflows/daily-scan.yml` — schedule: weekdays 11:30 UTC (~7:30am ET). The
+- `.github/workflows/daily-scan.yml` — schedule: weekdays 10:47 UTC (~6:47am ET). The
   bot commits results back to the repo, so ALWAYS `git pull --no-rebase` before pushing.
+  Schedule changed 2026-07-23 from 11:30 UTC: GitHub's scheduler was running the job
+  1.5-2h late, pushing the scan past US market open. Moved earlier and off the congested
+  :30 minute (many jobs queue on the half-hour) to restore the pre-open buffer.
 - `data/history.json` — rolling 45-day mention history (the baseline). Do not hand-edit.
 - `data/picks.json` — daily top-10 picks with entry prices, for hit-rate grading.
 - `reports/YYYY-MM-DD.md` + `REPORT.md` — the daily digest (REPORT.md = latest).

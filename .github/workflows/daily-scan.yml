@@ -2,8 +2,10 @@ name: Daily Reddit momentum scan
 
 on:
   schedule:
-    # 11:30 UTC = 7:30am ET (adjusts to 6:30am during standard time) - before US market open, weekdays
-    - cron: "30 11 * * 1-5"
+    # 10:47 UTC = 6:47am ET (adjusts to 5:47am during standard time) - before US market open, weekdays.
+    # Moved earlier from 11:30 and off the congested :30 minute because GitHub's scheduler was
+    # running 1.5-2h late, pushing the scan past US market open. This restores the pre-open buffer.
+    - cron: "47 10 * * 1-5"
   workflow_dispatch: {}   # lets you trigger a run manually from the Actions tab
 
 permissions:
