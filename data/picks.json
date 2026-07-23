@@ -269,64 +269,64 @@
 ],
 "2026-07-23": [
 {
-"ticker": "GOOGL",
-"price": 342.09,
-"composite": 0.63,
+"ticker": "INTC",
+"price": 100.23,
+"composite": 0.79,
 "setup": "EARLY"
 },
 {
-"ticker": "RDDT",
-"price": 170.38,
-"composite": 0.63,
+"ticker": "ES",
+"price": 74.62,
+"composite": 0.66,
 "setup": "EARLY"
 },
 {
-"ticker": "FCF",
-"price": 20.83,
-"composite": 0.63,
+"ticker": "USO",
+"price": 139.49,
+"composite": 0.615,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "TSLA",
+"price": 319.69,
+"composite": 0.608,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "AGI",
+"price": 29.38,
+"composite": 0.603,
 "setup": "EARLY"
 },
 {
-"ticker": "META",
-"price": 627.17,
-"composite": 0.575,
+"ticker": "WTI",
+"price": 3.85,
+"composite": 0.582,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "EU",
+"price": 1.21,
+"composite": 0.549,
 "setup": "EARLY"
 },
 {
-"ticker": "UP",
-"price": 6.18,
-"composite": 0.536,
+"ticker": "AMZN",
+"price": 233.66,
+"composite": 0.546,
+"setup": "NOISE"
+},
+{
+"ticker": "SPCX",
+"price": 118.24,
+"composite": 0.51,
 "setup": "NOISE"
 },
 {
 "ticker": "GOOG",
-"price": 341.91,
-"composite": 0.492,
-"setup": "EARLY"
-},
-{
-"ticker": "TSLA",
-"price": 374.01,
-"composite": 0.492,
-"setup": "EARLY"
-},
-{
-"ticker": "IBM",
-"price": 205.77,
-"composite": 0.47,
-"setup": "EARLY"
-},
-{
-"ticker": "SPCX",
-"price": 115.26,
-"composite": 0.463,
-"setup": "CROWD REACTION"
-},
-{
-"ticker": "AMD",
-"price": 552.33,
-"composite": 0.457,
-"setup": "CROWD REACTION"
+"price": 318.34,
+"composite": 0.445,
+"setup": "FADING"
 }
 ]
 }

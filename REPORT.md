@@ -2,111 +2,116 @@
 
 *Idea-surfacing only — not financial advice. Verify everything before trading.*
 
+## Extreme spikes (5σ+)
+- **$INTC** — +34.3σ vs 5d baseline (+1340%), composite 0.79
+- **$USO** — +11.2σ vs 5d baseline (+280%), composite 0.61
+- **$EU** — +5.6σ vs 5d baseline (+253%), composite 0.55
+
 ## Top tickers by composite score
 
-| #  | Ticker     | Setup                | Score | Mentions | Velocity | Sentiment | Breadth | 5d price |
-|----|------------|----------------------|-------|----------|----------|-----------|---------|----------|
-| 1  | **$GOOGL** | EARLY (0.8)          | 0.63  | 344      | 0.60     | 0.40      | 1.00    | -3.5%    |
-| 2  | **$RDDT**  | EARLY (0.5)          | 0.63  | 112      | 0.60     | 0.40      | 1.00    | -8.0%    |
-| 3  | **$FCF**   | EARLY (0.8)          | 0.63  | 52       | 0.60     | 0.40      | 1.00    | -2.4%    |
-| 4  | **$META**  | EARLY (0.5)          | 0.57  | 80       | 0.56     | 0.40      | 0.85    | -5.6%    |
-| 5  | **$UP**    | NOISE (0.4)          | 0.54  | 19       | 0.46     | 0.40      | 0.85    | -3.6%    |
-| 6  | **$GOOG**  | EARLY (0.7)          | 0.49  | 574      | 0.60     | 0.40      | 0.45    | -3.4%    |
-| 7  | **$TSLA**  | EARLY (0.7)          | 0.49  | 286      | 0.60     | 0.40      | 0.45    | -4.4%    |
-| 8  | **$IBM**   | EARLY (0.5)          | 0.47  | 150      | 0.54     | 0.40      | 0.45    | -6.1%    |
-| 9  | **$SPCX**  | CROWD REACTION (0.6) | 0.46  | 310      | 0.43     | 0.40      | 0.60    | -12.1%   |
-| 10 | **$AMD**   | CROWD REACTION (0.7) | 0.46  | 124      | 0.51     | 0.40      | 0.45    | +10.3%   |
+| #  | Ticker    | Setup                | Score | Mentions | Velocity | Sentiment | Breadth | 5d price |
+|----|-----------|----------------------|-------|----------|----------|-----------|---------|----------|
+| 1  | **$INTC** | EARLY (0.5)          | 0.79  | 311      | 1.00     | 0.40      | 1.00    | +5.5%    |
+| 2  | **$ES**   | EARLY (0.8)          | 0.66  | 28       | 0.77     | 0.40      | 0.85    | +0.0%    |
+| 3  | **$USO**  | CROWD REACTION (0.8) | 0.61  | 76       | 1.00     | 0.40      | 0.30    | +12.5%   |
+| 4  | **$TSLA** | CROWD REACTION (0.7) | 0.61  | 412      | 0.54     | 0.40      | 1.00    | -16.1%   |
+| 5  | **$AGI**  | EARLY (0.7)          | 0.60  | 57       | 0.63     | 0.40      | 0.85    | +4.0%    |
+| 6  | **$WTI**  | CROWD REACTION (0.8) | 0.58  | 28       | 0.76     | 0.40      | 0.55    | +10.3%   |
+| 7  | **$EU**   | EARLY (0.5)          | 0.55  | 53       | 0.93     | 0.40      | 0.15    | +5.2%    |
+| 8  | **$AMZN** | NOISE (0.4)          | 0.55  | 51       | 0.39     | 0.40      | 1.00    | -5.5%    |
+| 9  | **$SPCX** | NOISE (0.4)          | 0.51  | 350      | 0.30     | 0.40      | 1.00    | -4.6%    |
+| 10 | **$GOOG** | FADING (0.7)         | 0.45  | 334      | 0.14     | 0.40      | 1.00    | -8.0%    |
 
 *Setup labels are hypotheses about the situation type, not buy/sell advice: EARLY = chatter building before price; CROWD REACTION = chatter chasing a move; EVENT GAMBLE = binary catalyst ahead; FADING = losing steam; NOISE = background hum.*
 
 ## My watchlist
 ### $SKHY — SK Hynix
 - Mentions: 0 (yesterday: 0) — **quiet**
-- Price: +8.5% (5d), last $165.27
+- Price: +10.0% (5d), last $169.5
 - No posts retrieved (Reddit access pending or genuinely quiet)
 
 ## Why they're here
-### $GOOGL — Alphabet (Google)
-- **Hypothesis: EARLY (0.8)** — chatter accelerating while price is still quiet
-- Velocity: 4.6x vs 24h ago (baseline building)
+### $INTC — Intel
+- **Hypothesis: EARLY (0.5)** — chatter accelerating, but confined to few subs so far
+- Velocity: +34.3σ vs 5d baseline (+1340%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
-- 5-day price: -3.5% (chatter building, price relatively quiet)
+- 5-day price: +5.5% (chatter building, price relatively quiet)
 
-### $RDDT — Reddit
+### $ES — Eversource Energy
+- **Hypothesis: EARLY (0.8)** — chatter accelerating while price is still quiet
+- Velocity: +4.6σ vs 5d baseline (+115%)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: +0.0% (chatter building, price relatively quiet)
+
+### $USO — United States Commodity Funds LLC - United States Oil Fund
+- **Hypothesis: CROWD REACTION (0.8)** — chatter chasing a +12.5% move already up
+- Velocity: +11.2σ vs 5d baseline (+280%)
+- Breadth: in 2 subs
+- Sentiment: no substantive posts found
+- 5-day price: +12.5% (price already moved — crowd may be reacting)
+
+### $TSLA — Tesla
+- **Hypothesis: CROWD REACTION (0.7)** — chatter chasing a -16.1% move already down
+- Velocity: +3.3σ vs 5d baseline (+314%)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: -16.1% (price already moved — crowd may be reacting)
+
+### $AGI — Alamos Gold
+- **Hypothesis: EARLY (0.7)** — chatter accelerating while price is still quiet
+- Velocity: +3.8σ vs 5d baseline (+448%)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: +4.0% (chatter building, price relatively quiet)
+
+### $WTI — W&amp;T Offshore
+- **Hypothesis: CROWD REACTION (0.8)** — chatter chasing a +10.3% move already up
+- Velocity: +4.6σ vs 5d baseline (+250%)
+- Breadth: in 2 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: +10.3% (price already moved — crowd may be reacting)
+
+### $EU — enCore Energy
 - **Hypothesis: EARLY (0.5)** — chatter accelerating, but confined to few subs so far
-- Velocity: 4.7x vs 24h ago (baseline building)
+- Velocity: +5.6σ vs 5d baseline (+253%)
+- Breadth: in 1 subs
+- Sentiment: no substantive posts found
+- 5-day price: +5.2% (chatter building, price relatively quiet)
+
+### $AMZN — Amazon
+- **Hypothesis: NOISE (0.4)** — mixed signals, nothing decisive
+- Velocity: +2.3σ vs 5d baseline (+132%)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: -5.5% (chatter building, price relatively quiet)
+
+### $SPCX — SpaceX
+- **Hypothesis: NOISE (0.4)** — mixed signals, nothing decisive
+- Velocity: +1.8σ vs 5d baseline (+88%)
+- Breadth: in 4 subs incl. small caps
+- Sentiment: no substantive posts found
+- 5-day price: -4.6% (chatter building, price relatively quiet)
+
+### $GOOG — Alphabet (Google)
+- **Hypothesis: FADING (0.7)** — mentions down to 0.6x of yesterday
+- Velocity: +0.8σ vs 5d baseline (+105%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: -8.0% (chatter building, price relatively quiet)
 
-### $FCF — First Commonwealth Financial Corp
-- **Hypothesis: EARLY (0.8)** — chatter accelerating while price is still quiet
-- Velocity: 7.4x vs 24h ago (baseline building)
-- Breadth: in 4 subs incl. small caps
-- Sentiment: no substantive posts found
-- 5-day price: -2.4% (chatter building, price relatively quiet)
-
-### $META — Meta Platforms (Facebook)
-- **Hypothesis: EARLY (0.5)** — chatter accelerating, but confined to few subs so far
-- Velocity: 2.7x vs 24h ago (baseline building)
-- Breadth: in 4 subs incl. small caps
-- Sentiment: no substantive posts found
-- 5-day price: -5.6% (chatter building, price relatively quiet)
-
-### $UP — Wheels Up
-- **Hypothesis: NOISE (0.4)** — mixed signals, nothing decisive
-- Velocity: 2.4x vs 24h ago (baseline building)
-- Breadth: in 4 subs incl. small caps
-- Sentiment: no substantive posts found
-- 5-day price: -3.6% (chatter building, price relatively quiet)
-
-### $GOOG — Alphabet (Google)
-- **Hypothesis: EARLY (0.7)** — chatter accelerating while price is still quiet
-- Velocity: 5.2x vs 24h ago (baseline building)
-- Breadth: in 2 subs
-- Sentiment: no substantive posts found
-- 5-day price: -3.4% (chatter building, price relatively quiet)
-
-### $TSLA — Tesla
-- **Hypothesis: EARLY (0.7)** — chatter accelerating while price is still quiet
-- Velocity: 4.8x vs 24h ago (baseline building)
-- Breadth: in 2 subs
-- Sentiment: no substantive posts found
-- 5-day price: -4.4% (chatter building, price relatively quiet)
-
-### $IBM — IBM
-- **Hypothesis: EARLY (0.5)** — chatter accelerating, but confined to few subs so far
-- Velocity: 2.6x vs 24h ago (baseline building)
-- Breadth: in 2 subs
-- Sentiment: no substantive posts found
-- 5-day price: -6.1% (chatter building, price relatively quiet)
-
-### $SPCX — SpaceX
-- **Hypothesis: CROWD REACTION (0.6)** — chatter chasing a -12.1% move already down
-- Velocity: 2.3x vs 24h ago (baseline building)
-- Breadth: in 3 subs
-- Sentiment: no substantive posts found
-- 5-day price: -12.1% (price already moved — crowd may be reacting)
-
-### $AMD — AMD
-- **Hypothesis: CROWD REACTION (0.7)** — chatter chasing a +10.3% move already up
-- Velocity: 2.5x vs 24h ago (baseline building)
-- Breadth: in 2 subs
-- Sentiment: no substantive posts found
-- 5-day price: +10.3% (price already moved — crowd may be reacting)
-
 ## Watchlist — how yesterday's names are trending
-- **$MU**: mentions 488 → 348 (fading)
-- **$MSFT**: mentions 166 → 256 (rising)
-- **$SMCI**: mentions 136 → 62 (fading)
-- **$SPCX**: mentions 135 → 310 (rising)
-- **$GOOG**: mentions 125 → 574 (rising)
-- **$SNDK**: mentions 113 → 64 (fading)
-- **$NBIS**: mentions 96 → 74 (fading)
-- **$GOOGL**: mentions 79 → 344 (rising)
-- **$NVDA**: mentions 77 → 181 (rising)
-- **$AMD**: mentions 73 → 124 (rising)
+- **$MU**: mentions 488 → 368 (fading)
+- **$MSFT**: mentions 166 → 163 (steady)
+- **$SMCI**: mentions 136 → 17 (fading)
+- **$SPCX**: mentions 135 → 350 (rising)
+- **$GOOG**: mentions 125 → 334 (rising)
+- **$SNDK**: mentions 113 → 68 (fading)
+- **$NBIS**: mentions 96 → 45 (fading)
+- **$GOOGL**: mentions 79 → 241 (rising)
+- **$NVDA**: mentions 77 → 85 (steady)
+- **$AMD**: mentions 73 → 76 (steady)
 
 ## Hit-rate scoreboard — did past picks actually move?
 *Across 20 evaluated picks: average 3-day return +1.9%, 10/20 positive (50% hit rate). By setup — EARLY: -0.0% avg over 5; FADING: +2.8% avg over 5; NOISE: -0.2% avg over 8.*
