@@ -76,61 +76,71 @@
 "ticker": "MSFT",
 "price": 393.82,
 "composite": 0.63,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": -0.9
 },
 {
 "ticker": "IBM",
 "price": 212.67,
 "composite": 0.471,
-"setup": "FADING"
+"setup": "FADING",
+"ret_3d": -3.2
 },
 {
 "ticker": "ASTS",
 "price": 57.8,
 "composite": 0.461,
-"setup": "FADING"
+"setup": "FADING",
+"ret_3d": 7.2
 },
 {
 "ticker": "IREN",
 "price": 33.62,
 "composite": 0.455,
-"setup": "CROWD REACTION"
+"setup": "CROWD REACTION",
+"ret_3d": 22.8
 },
 {
 "ticker": "USO",
 "price": 123.96,
 "composite": 0.455,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": 6.2
 },
 {
 "ticker": "SNAP",
 "price": 4.53,
 "composite": 0.455,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": -1.3
 },
 {
 "ticker": "TSLA",
 "price": 380.84,
 "composite": 0.452,
-"setup": "FADING"
+"setup": "FADING",
+"ret_3d": -1.8
 },
 {
 "ticker": "MU",
 "price": 848.95,
 "composite": 0.44,
-"setup": "FADING"
+"setup": "FADING",
+"ret_3d": 13.0
 },
 {
 "ticker": "AM",
 "price": 22.59,
 "composite": 0.434,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": 1.2
 },
 {
 "ticker": "GOOG",
 "price": 346.12,
 "composite": 0.432,
-"setup": "FADING"
+"setup": "FADING",
+"ret_3d": -1.2
 }
 ],
 "2026-07-21": [
@@ -255,6 +265,68 @@
 "price": 105.45,
 "composite": 0.465,
 "setup": "NOISE"
+}
+],
+"2026-07-23": [
+{
+"ticker": "GOOGL",
+"price": 342.09,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "RDDT",
+"price": 170.38,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "FCF",
+"price": 20.83,
+"composite": 0.63,
+"setup": "EARLY"
+},
+{
+"ticker": "META",
+"price": 627.17,
+"composite": 0.575,
+"setup": "EARLY"
+},
+{
+"ticker": "UP",
+"price": 6.18,
+"composite": 0.536,
+"setup": "NOISE"
+},
+{
+"ticker": "GOOG",
+"price": 341.91,
+"composite": 0.492,
+"setup": "EARLY"
+},
+{
+"ticker": "TSLA",
+"price": 374.01,
+"composite": 0.492,
+"setup": "EARLY"
+},
+{
+"ticker": "IBM",
+"price": 205.77,
+"composite": 0.47,
+"setup": "EARLY"
+},
+{
+"ticker": "SPCX",
+"price": 115.26,
+"composite": 0.463,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "AMD",
+"price": 552.33,
+"composite": 0.457,
+"setup": "CROWD REACTION"
 }
 ]
 }
