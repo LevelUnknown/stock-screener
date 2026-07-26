@@ -31,16 +31,14 @@ sentiment (claude-sonnet-4-6 via API) + Yahoo price data → composite score
   Reddit closed self-serve API registration — approval now via manual support ticket
   (submitted, account justlostmypizza) with high rejection rates for solo devs.
   Treat OAuth as "bonus if approved", not a dependency.
-- NEW (2026-07-26): RSS fallback layer in scanner.py. fetch_rss_entries() pulls BOTH
-  the top-of-day AND hot Atom feeds (reddit.com/r/SUB/top.rss?t=day and /hot.rss) for
-  each sub ONCE per run, deduped by post URL and cached (top surfaces the day's biggest
-  threads, hot catches fast-risers that haven't peaked). Feed fetch cap is
-  RSS_POSTS_PER_SUB = 100 (Reddit's public-feed max). match_rss_posts() matches tickers
-  locally (conservative, UNCHANGED: "$SYM" always, bare "SYM" only for 3+ char symbols
-  to avoid EU/MU-style false hits, company name case-insensitive at 4+ chars).
-  fetch_reddit_posts() tries OAuth → public search → RSS fallback, in that order.
-  RSS_SUBREDDITS now includes TheRaceTo10Million — note it feeds ONLY the RSS/sentiment
-  leg; it is not an ApeWisdom filter, so it never affects mention counts or breadth.
+- NEW (2026-07-26): RSS fallback layer in scanner.py. fetch_rss_entries() pulls each
+  sub's top-of-day Atom feed (reddit.com/r/SUB/top.rss?t=day) ONCE per run — one request
+  per sub — deduped by post URL and cached. match_rss_posts() matches tickers locally
+  (conservative, UNCHANGED: "$SYM" always, bare "SYM" only for 3+ char symbols to avoid
+  EU/MU-style false hits, company name case-insensitive at 4+ chars). fetch_reddit_posts()
+  tries OAuth → public search → RSS fallback, in that order.
+  RSS_SUBREDDITS includes TheRaceTo10Million — note it feeds ONLY the RSS/sentiment leg;
+  it is not an ApeWisdom filter, so it never affects mention counts or breadth.
   Dedicated watchlist subs: WATCHLIST_SUBREDDITS (near MY_WATCHLIST) maps a ticker to
   its own subreddit; build_my_watchlist() fetches that sub's top-of-day feed via
   fetch_watchlist_sub_posts() (cached per sub) and treats every post as auto-relevant —
@@ -49,10 +47,21 @@ sentiment (claude-sonnet-4-6 via API) + Yahoo price data → composite score
   Currently WATCHLIST_SUBREDDITS = {"SKHY": "SKHynix"}.
   RSS-sourced posts carry score=0 (Atom has no upvote counts) and a via_rss=True flag;
   the report omits the "(N upvotes)" text for such posts rather than printing "0 upvotes".
-  UNTESTED from GitHub Actions runners — Reddit's datacenter-IP blocking may also 403
-  the RSS feeds; if so, sentiment gracefully degrades to the 0.40 default as before.
-  Plan B if RSS also blocked from Actions: run post-fetching from owner's home PC
-  (residential IP not blocked).
+  RATE LIMITING (fixed 2026-07-26 after a live run): unauthenticated GitHub-runner IPs
+  have a tight Reddit budget. An earlier version fetched top+hot feeds (12 requests, 2s
+  apart) and drew HTTP 429s after the first couple of feeds — rate-limited, not IP-blocked
+  (two feeds had succeeded). Current guards: (a) top.rss only, one request per sub; (b)
+  RSS_REQUEST_GAP = 10s between requests (was 2s); (c) _rss_get() retries ONLY on 429, up
+  to 2 times, honoring Retry-After (capped 60s) else 15s/30s backoff — any other error
+  status raises immediately and the feed is skipped, unchanged. Same _rss_get retry path
+  covers the watchlist-sub fetch. No limit= param on .rss URLs — Reddit ignores it and
+  returns ~25 entries regardless, so there's no per-sub count knob.
+  Worst-case runtime: ~5.5 min if every one of the 6 feeds 429s through both backoff
+  retries (the common 429 shape); a pathological Retry-After=60-every-time would reach
+  ~13 min but requires Reddit to keep demanding 60s waits. Normal runs are seconds.
+  STILL possible from Actions: if Reddit escalates to a hard 403/IP-block on RSS too,
+  sentiment gracefully degrades to the 0.40 default. Plan B: run post-fetching from
+  owner's home PC (residential IP not blocked).
   If OAuth ever approved: add repo secrets REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET —
   OAuth takes priority automatically, zero code changes.
 - WARM-UP: baselines need ~5 days of history (started 2026-07-18). Until then velocity

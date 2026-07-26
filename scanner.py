@@ -203,9 +203,15 @@ def fetch_reddit_posts(ticker: str, limit: int = 3, query: str | None = None,
 # --- RSS fallback (no API key needed) ---------------------------------
 # Reddit's search API now requires manual approval, but every subreddit
 # still exposes a public Atom feed (add .rss to the URL). We fetch each
-# subreddit's top-of-day feed ONCE per run (5 requests total), cache the
-# entries, and match tickers against them locally. Low volume, polite,
+# subreddit's top-of-day feed ONCE per run (one request per sub), cache
+# the entries, and match tickers against them locally. Low volume, polite,
 # and it unlocks real sentiment scores while OAuth approval is pending.
+#
+# Rate-limit lesson (2026-07-26): unauthenticated GitHub-runner IPs have a
+# tight Reddit budget. Doubling to top+hot feeds (12 requests, 2s apart) drew
+# 429s after the first couple. Fix: top.rss only, 10s apart, retry politely
+# on 429 (see _rss_get). Feeds return ~25 entries regardless of any limit param
+# (it's ignored on .rss endpoints), so there is no per-sub count knob.
 
 RSS_SUBREDDITS = [
     "wallstreetbets", "stocks", "pennystocks", "options", "smallstreetbets",
@@ -213,7 +219,8 @@ RSS_SUBREDDITS = [
     # filter, so its posts never affect mention counts or breadth scoring.
     "TheRaceTo10Million",
 ]
-RSS_POSTS_PER_SUB = 100  # Reddit caps its public feeds at 100 entries
+
+RSS_REQUEST_GAP = 10   # seconds between feed requests (was 2 — tightened after 429s)
 
 _rss_cache: list[dict] | None = None
 
@@ -229,13 +236,43 @@ def _strip_html(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+RSS_RETRY_BACKOFF = [15, 30]   # seconds to wait before retry 1, then retry 2 (on 429)
+RSS_RETRY_AFTER_CAP = 60       # never honor a Retry-After longer than this
+
+
+def _rss_get(url: str) -> requests.Response:
+    """GET an RSS feed, politely retrying ONLY on HTTP 429 (rate limit).
+
+    Retries up to len(RSS_RETRY_BACKOFF) times. Wait honors the Retry-After
+    header when present (capped at RSS_RETRY_AFTER_CAP), else exponential backoff
+    (15s then 30s). Any non-429 error status raises immediately — no retry — so
+    the caller logs and moves on, exactly as before."""
+    for attempt in range(len(RSS_RETRY_BACKOFF) + 1):
+        resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=30)
+        if resp.status_code != 429 or attempt == len(RSS_RETRY_BACKOFF):
+            resp.raise_for_status()   # 200 -> return; any error (incl. final 429) -> raise
+            return resp
+        retry_after = resp.headers.get("Retry-After")
+        wait = RSS_RETRY_BACKOFF[attempt]
+        if retry_after:
+            try:
+                wait = min(float(retry_after), RSS_RETRY_AFTER_CAP)
+            except ValueError:
+                pass  # non-numeric Retry-After (rare) -> fall back to backoff
+        print(f"[warn] RSS 429 for {url} — retry {attempt + 1}/{len(RSS_RETRY_BACKOFF)} "
+              f"in {wait:.0f}s")
+        time.sleep(wait)
+    # unreachable: the loop either returns or raises on the final attempt
+    raise RuntimeError("unreachable")
+
+
 def _parse_rss_feed(url: str, sub: str) -> list[dict]:
     """Fetch one Atom feed and return its entries as post dicts. Raises on HTTP
-    or parse error (callers handle the failure per-feed)."""
+    or parse error (callers handle the failure per-feed). Rate-limit retries are
+    handled by _rss_get."""
     import xml.etree.ElementTree as ET
     ns = {"a": "http://www.w3.org/2005/Atom"}
-    resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=30)
-    resp.raise_for_status()
+    resp = _rss_get(url)
     root = ET.fromstring(resp.content)
     posts = []
     for entry in root.findall("a:entry", ns):
@@ -256,39 +293,35 @@ def _parse_rss_feed(url: str, sub: str) -> list[dict]:
 
 
 def fetch_rss_entries() -> list[dict]:
-    """Fetch + cache today's posts from each subreddit's Atom feeds.
+    """Fetch + cache today's top-of-day posts from each subreddit's Atom feed.
 
-    Pulls BOTH the top-of-day and the hot feed per sub (top surfaces the day's
-    biggest threads; hot catches fast-rising ones that haven't peaked yet), and
-    dedupes by post URL so a thread in both feeds is cached only once."""
+    One request per sub (top.rss?t=day), spaced RSS_REQUEST_GAP seconds apart to
+    stay under the unauthenticated rate limit, deduped by post URL. Per-feed 429s
+    are retried politely inside _rss_get; other errors are logged and skipped."""
     global _rss_cache
     if _rss_cache is not None:
         return _rss_cache
     entries: list[dict] = []
     seen: set[str] = set()
-    # Two feeds per sub. top.rss already carries a query string, hot.rss doesn't —
-    # both get an explicit &/?limit below via their pre-built query fragment.
-    feeds = [
-        f"top.rss?t=day&limit={RSS_POSTS_PER_SUB}",
-        f"hot.rss?limit={RSS_POSTS_PER_SUB}",
-    ]
+    fetched = 0
     for sub in RSS_SUBREDDITS:
-        for feed in feeds:
-            url = f"https://www.reddit.com/r/{sub}/{feed}"
-            feed_name = feed.split("?")[0]  # "top.rss" / "hot.rss" for logging
-            try:
-                for post in _parse_rss_feed(url, sub):
-                    if post["url"] and post["url"] in seen:
-                        continue  # same thread already cached from the other feed
-                    if post["url"]:
-                        seen.add(post["url"])
-                    entries.append(post)
-                print(f"[info] RSS: fetched r/{sub} {feed_name} feed.")
-            except Exception as exc:  # noqa: BLE001
-                print(f"[warn] RSS fetch failed for r/{sub}/{feed_name}: {exc}")
-            time.sleep(2)  # be polite between every feed request
+        url = f"https://www.reddit.com/r/{sub}/top.rss?t=day"
+        try:
+            posts = _parse_rss_feed(url, sub)
+            fetched += 1
+            for post in posts:
+                if post["url"] and post["url"] in seen:
+                    continue
+                if post["url"]:
+                    seen.add(post["url"])
+                entries.append(post)
+            print(f"[info] RSS: fetched r/{sub} top-of-day feed ({len(posts)} posts).")
+        except Exception as exc:  # noqa: BLE001
+            print(f"[warn] RSS fetch failed for r/{sub}: {exc}")
+        time.sleep(RSS_REQUEST_GAP)  # unauthenticated runner IPs have a tight budget
     _rss_cache = entries
-    print(f"[info] RSS: cached {len(entries)} unique posts across {len(RSS_SUBREDDITS)} subs.")
+    print(f"[info] RSS summary: {fetched}/{len(RSS_SUBREDDITS)} feeds fetched, "
+          f"{len(entries)} unique posts")
     return entries
 
 
@@ -325,7 +358,7 @@ def fetch_watchlist_sub_posts(sub: str, limit: int = 3) -> list[dict]:
     name the cashtag. The fetched feed is cached per sub so repeat calls don't
     re-request it."""
     if sub not in _watchlist_sub_cache:
-        url = f"https://www.reddit.com/r/{sub}/top.rss?t=day&limit={RSS_POSTS_PER_SUB}"
+        url = f"https://www.reddit.com/r/{sub}/top.rss?t=day"
         try:
             _watchlist_sub_cache[sub] = _parse_rss_feed(url, sub)
             print(f"[info] RSS: fetched watchlist sub r/{sub} "
@@ -333,7 +366,7 @@ def fetch_watchlist_sub_posts(sub: str, limit: int = 3) -> list[dict]:
         except Exception as exc:  # noqa: BLE001
             print(f"[warn] RSS fetch failed for watchlist sub r/{sub}: {exc}")
             _watchlist_sub_cache[sub] = []
-        time.sleep(2)  # be polite
+        time.sleep(RSS_REQUEST_GAP)  # be polite (same gap as the main feed loop)
     return _watchlist_sub_cache[sub][:limit]
 
 
