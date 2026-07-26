@@ -4,18 +4,18 @@
 
 ## Top tickers by composite score
 
-| #  | Ticker    | Setup       | Score | Mentions | Velocity | Sentiment | Breadth | 5d price |
-|----|-----------|-------------|-------|----------|----------|-----------|---------|----------|
-| 1  | **$SPCX** | NOISE (0.7) | 0.39  | 46       | 0.00     | 0.40      | 1.00    | -4.0%    |
-| 2  | **$MSFT** | NOISE (0.7) | 0.39  | 43       | 0.00     | 0.40      | 1.00    | -5.1%    |
-| 3  | **$MU**   | NOISE (0.7) | 0.39  | 37       | 0.00     | 0.40      | 1.00    | +6.4%    |
-| 4  | **$TSLA** | NOISE (0.7) | 0.39  | 32       | 0.00     | 0.40      | 1.00    | -15.3%   |
-| 5  | **$GOOG** | NOISE (0.7) | 0.39  | 21       | 0.00     | 0.40      | 1.00    | -9.2%    |
-| 6  | **$AMD**  | NOISE (0.7) | 0.39  | 18       | 0.00     | 0.40      | 1.00    | +3.6%    |
-| 7  | **$AMZN** | NOISE (0.7) | 0.39  | 19       | 0.00     | 0.40      | 1.00    | -7.2%    |
-| 8  | **$NOW**  | NOISE (0.7) | 0.35  | 19       | 0.00     | 0.40      | 0.85    | -5.7%    |
-| 9  | **$META** | NOISE (0.4) | 0.25  | 22       | 0.00     | 0.40      | 0.45    | -7.8%    |
-| 10 | **$EU**   | NOISE (0.4) | 0.25  | 46       | 0.18     | 0.40      | 0.15    | -3.4%    |
+| #  | Ticker    | Setup              | Score | Mentions | Velocity | Sentiment | Breadth | 5d price |
+|----|-----------|--------------------|-------|----------|----------|-----------|---------|----------|
+| 1  | **$SPCX** | NOISE (0.7)        | 0.39  | 46       | 0.00     | 0.40      | 1.00    | -4.0%    |
+| 2  | **$MSFT** | NOISE (0.7)        | 0.39  | 43       | 0.00     | 0.40      | 1.00    | -5.1%    |
+| 3  | **$MU**   | NOISE (0.7)        | 0.39  | 37       | 0.00     | 0.40      | 1.00    | +6.4%    |
+| 4  | **$TSLA** | NOISE (0.7)        | 0.39  | 31       | 0.00     | 0.40      | 1.00    | -15.3%   |
+| 5  | **$GOOG** | NOISE (0.7)        | 0.39  | 20       | 0.00     | 0.40      | 1.00    | -9.2%    |
+| 6  | **$AMD**  | NOISE (0.7)        | 0.39  | 18       | 0.00     | 0.40      | 1.00    | +3.6%    |
+| 7  | **$AMZN** | EVENT GAMBLE (0.7) | 0.39  | 19       | 0.00     | 0.40      | 1.00    | -7.2%    |
+| 8  | **$NOW**  | NOISE (0.7)        | 0.35  | 19       | 0.00     | 0.40      | 0.85    | -12.2%   |
+| 9  | **$META** | NOISE (0.4)        | 0.25  | 22       | 0.00     | 0.40      | 0.45    | -7.8%    |
+| 10 | **$EU**   | NOISE (0.4)        | 0.25  | 46       | 0.18     | 0.40      | 0.15    | -3.4%    |
 
 *Setup labels are hypotheses about the situation type, not buy/sell advice: EARLY = chatter building before price; CROWD REACTION = chatter chasing a move; EVENT GAMBLE = binary catalyst ahead; FADING = losing steam; NOISE = background hum.*
 
@@ -23,7 +23,8 @@
 ### $SKHY — SK Hynix
 - Mentions: 0 (yesterday: 0) — **quiet**
 - Price: +2.3% (5d), last $154.57
-- No posts retrieved (Reddit access pending or genuinely quiet)
+- Post: [Samsung Elec, SK Group seal $950 billion deals as South Korea hosts AI powers](https://www.reddit.com/r/stocks/comments/1v6bhuk/samsung_elec_sk_group_seal_950_billion_deals_as/) (r/stocks)
+- Post: [South Korea’s SK Hynix sign $750 billion partnership with US big tech](https://www.reddit.com/r/SKHynix/comments/1v5zesd/south_koreas_sk_hynix_sign_750_billion/) (r/SKHynix)
 
 ## Why they're here
 ### $SPCX — SpaceX
@@ -49,38 +50,39 @@
 
 ### $TSLA — Tesla
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: -0.7σ vs 7d baseline (-79%)
+- Velocity: -0.7σ vs 7d baseline (-80%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: -15.3% (price already moved — crowd may be reacting)
 
 ### $GOOG — Alphabet (Google)
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: -0.9σ vs 7d baseline (-83%)
+- Velocity: -0.9σ vs 7d baseline (-84%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: -9.2% (chatter building, price relatively quiet)
 
 ### $AMD — AMD
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: -1.6σ vs 7d baseline (-67%)
+- Velocity: -1.6σ vs 7d baseline (-66%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: +3.6% (chatter building, price relatively quiet)
 
 ### $AMZN — Amazon
-- **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: -0.5σ vs 7d baseline (-31%)
+- **Hypothesis: EVENT GAMBLE (0.7)** — binary catalyst ahead: AMZN earnings call capex concerns
+- Velocity: -0.5σ vs 7d baseline (-30%)
 - Breadth: in 4 subs incl. small caps
-- Sentiment: no substantive posts found
+- Sentiment: Bearish sentiment on AMZN ahead of earnings, selling covered calls
 - 5-day price: -7.2% (chatter building, price relatively quiet)
+- Top post: [Selling software calls into the next week](https://www.reddit.com/r/options/comments/1v6l5bk/selling_software_calls_into_the_next_week/)
 
 ### $NOW — ServiceNow
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
 - Velocity: -0.6σ vs 7d baseline (-61%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
-- 5-day price: -5.7% (chatter building, price relatively quiet)
+- 5-day price: -12.2% (price already moved — crowd may be reacting)
 
 ### $META — Meta Platforms (Facebook)
 - **Hypothesis: NOISE (0.4)** — mixed signals, nothing decisive
@@ -97,11 +99,11 @@
 - 5-day price: -3.4% (chatter building, price relatively quiet)
 
 ## Watchlist — how yesterday's names are trending
-- **$TSLA**: mentions 425 → 32 (fading)
+- **$TSLA**: mentions 425 → 31 (fading)
 - **$SPCX**: mentions 360 → 46 (fading)
-- **$INTC**: mentions 339 → 10 (fading)
+- **$INTC**: mentions 339 → 9 (fading)
 - **$MU**: mentions 334 → 37 (fading)
-- **$GOOG**: mentions 256 → 21 (fading)
+- **$GOOG**: mentions 256 → 20 (fading)
 - **$GOOGL**: mentions 193 → 18 (fading)
 - **$MSFT**: mentions 152 → 43 (fading)
 - **$NOW**: mentions 103 → 19 (fading)

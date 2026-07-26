@@ -472,11 +472,11 @@
 "ticker": "AMZN",
 "price": 232.11,
 "composite": 0.39,
-"setup": "NOISE"
+"setup": "EVENT GAMBLE"
 },
 {
 "ticker": "NOW",
-"price": 98.78,
+"price": 91.94,
 "composite": 0.352,
 "setup": "NOISE"
 },
