@@ -57,6 +57,15 @@ MY_WATCHLIST = {
     "SKHY": "SK Hynix",
 }
 
+# Dedicated subreddits for specific watchlist tickers, mapped "TICKER": "subreddit".
+# Posts in a ticker's OWN sub are treated as automatically relevant (no ticker- or
+# company-name text match required), because posts in a dedicated sub rarely spell
+# out the cashtag. Fetched via that sub's top-of-day Atom feed and merged into the
+# watchlist post list. Independent of MY_WATCHLIST — a ticker can be in either or both.
+WATCHLIST_SUBREDDITS = {
+    "SKHY": "SKHynix",
+}
+
 MIN_MENTIONS = 15          # ignore tickers below this — single-digit counts are noise
 
 # Common words / dead tickers that ApeWisdom misreads as stock symbols
@@ -198,8 +207,13 @@ def fetch_reddit_posts(ticker: str, limit: int = 3, query: str | None = None,
 # entries, and match tickers against them locally. Low volume, polite,
 # and it unlocks real sentiment scores while OAuth approval is pending.
 
-RSS_SUBREDDITS = ["wallstreetbets", "stocks", "pennystocks", "options", "smallstreetbets"]
-RSS_POSTS_PER_SUB = 50
+RSS_SUBREDDITS = [
+    "wallstreetbets", "stocks", "pennystocks", "options", "smallstreetbets",
+    # TheRaceTo10Million feeds ONLY the RSS/sentiment leg. It is not an ApeWisdom
+    # filter, so its posts never affect mention counts or breadth scoring.
+    "TheRaceTo10Million",
+]
+RSS_POSTS_PER_SUB = 100  # Reddit caps its public feeds at 100 entries
 
 _rss_cache: list[dict] | None = None
 
@@ -215,39 +229,66 @@ def _strip_html(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def _parse_rss_feed(url: str, sub: str) -> list[dict]:
+    """Fetch one Atom feed and return its entries as post dicts. Raises on HTTP
+    or parse error (callers handle the failure per-feed)."""
+    import xml.etree.ElementTree as ET
+    ns = {"a": "http://www.w3.org/2005/Atom"}
+    resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=30)
+    resp.raise_for_status()
+    root = ET.fromstring(resp.content)
+    posts = []
+    for entry in root.findall("a:entry", ns):
+        title = (entry.findtext("a:title", "", ns) or "").strip()
+        content = _strip_html(entry.findtext("a:content", "", ns) or "")
+        link_el = entry.find("a:link", ns)
+        link = link_el.get("href", "") if link_el is not None else ""
+        posts.append({
+            "title": title,
+            "text": content[:1500],
+            "score": 0,        # Atom feeds don't carry upvote counts
+            "num_comments": 0,
+            "subreddit": sub,
+            "url": link,
+            "via_rss": True,   # flags posts that have no real vote data
+        })
+    return posts
+
+
 def fetch_rss_entries() -> list[dict]:
-    """Fetch + cache today's top posts from each subreddit's Atom feed."""
+    """Fetch + cache today's posts from each subreddit's Atom feeds.
+
+    Pulls BOTH the top-of-day and the hot feed per sub (top surfaces the day's
+    biggest threads; hot catches fast-rising ones that haven't peaked yet), and
+    dedupes by post URL so a thread in both feeds is cached only once."""
     global _rss_cache
     if _rss_cache is not None:
         return _rss_cache
-    import xml.etree.ElementTree as ET
-    ns = {"a": "http://www.w3.org/2005/Atom"}
     entries: list[dict] = []
+    seen: set[str] = set()
+    # Two feeds per sub. top.rss already carries a query string, hot.rss doesn't —
+    # both get an explicit &/?limit below via their pre-built query fragment.
+    feeds = [
+        f"top.rss?t=day&limit={RSS_POSTS_PER_SUB}",
+        f"hot.rss?limit={RSS_POSTS_PER_SUB}",
+    ]
     for sub in RSS_SUBREDDITS:
-        url = f"https://www.reddit.com/r/{sub}/top.rss?t=day&limit={RSS_POSTS_PER_SUB}"
-        try:
-            resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=30)
-            resp.raise_for_status()
-            root = ET.fromstring(resp.content)
-            for entry in root.findall("a:entry", ns):
-                title = (entry.findtext("a:title", "", ns) or "").strip()
-                content = _strip_html(entry.findtext("a:content", "", ns) or "")
-                link_el = entry.find("a:link", ns)
-                link = link_el.get("href", "") if link_el is not None else ""
-                entries.append({
-                    "title": title,
-                    "text": content[:1500],
-                    "score": 0,  # Atom feeds don't carry upvote counts
-                    "num_comments": 0,
-                    "subreddit": sub,
-                    "url": link,
-                })
-            print(f"[info] RSS: fetched {sub} top-of-day feed.")
-        except Exception as exc:  # noqa: BLE001
-            print(f"[warn] RSS fetch failed for r/{sub}: {exc}")
-        time.sleep(2)  # be polite between feed requests
+        for feed in feeds:
+            url = f"https://www.reddit.com/r/{sub}/{feed}"
+            feed_name = feed.split("?")[0]  # "top.rss" / "hot.rss" for logging
+            try:
+                for post in _parse_rss_feed(url, sub):
+                    if post["url"] and post["url"] in seen:
+                        continue  # same thread already cached from the other feed
+                    if post["url"]:
+                        seen.add(post["url"])
+                    entries.append(post)
+                print(f"[info] RSS: fetched r/{sub} {feed_name} feed.")
+            except Exception as exc:  # noqa: BLE001
+                print(f"[warn] RSS fetch failed for r/{sub}/{feed_name}: {exc}")
+            time.sleep(2)  # be polite between every feed request
     _rss_cache = entries
-    print(f"[info] RSS: cached {len(entries)} posts across {len(RSS_SUBREDDITS)} subs.")
+    print(f"[info] RSS: cached {len(entries)} unique posts across {len(RSS_SUBREDDITS)} subs.")
     return entries
 
 
@@ -273,6 +314,27 @@ def match_rss_posts(ticker: str, name: str | None = None, limit: int = 3) -> lis
             if len(matched) >= limit:
                 break
     return matched
+
+
+_watchlist_sub_cache: dict[str, list[dict]] = {}
+
+
+def fetch_watchlist_sub_posts(sub: str, limit: int = 3) -> list[dict]:
+    """Top-of-day posts from a ticker's dedicated subreddit. Every post is treated
+    as relevant to that ticker (no text match), since dedicated-sub posts rarely
+    name the cashtag. The fetched feed is cached per sub so repeat calls don't
+    re-request it."""
+    if sub not in _watchlist_sub_cache:
+        url = f"https://www.reddit.com/r/{sub}/top.rss?t=day&limit={RSS_POSTS_PER_SUB}"
+        try:
+            _watchlist_sub_cache[sub] = _parse_rss_feed(url, sub)
+            print(f"[info] RSS: fetched watchlist sub r/{sub} "
+                  f"({len(_watchlist_sub_cache[sub])} posts).")
+        except Exception as exc:  # noqa: BLE001
+            print(f"[warn] RSS fetch failed for watchlist sub r/{sub}: {exc}")
+            _watchlist_sub_cache[sub] = []
+        time.sleep(2)  # be polite
+    return _watchlist_sub_cache[sub][:limit]
 
 
 def fetch_price_data(ticker: str) -> tuple[float | None, float | None]:
@@ -490,6 +552,17 @@ def build_my_watchlist(tickers: dict, history: dict) -> list[dict]:
         # mention-counters haven't indexed and posts that don't use the cashtag.
         posts = fetch_reddit_posts(sym, limit=3, query=f'"{sym}" OR "{name}"', name=name)
         time.sleep(2)
+        # If this ticker has a dedicated subreddit, pull its top-of-day feed and
+        # merge those posts in (auto-relevant, no text match), deduped by URL, cap 3.
+        if sym in WATCHLIST_SUBREDDITS:
+            seen_urls = {p["url"] for p in posts if p.get("url")}
+            for p in fetch_watchlist_sub_posts(WATCHLIST_SUBREDDITS[sym], limit=3):
+                if p.get("url") and p["url"] in seen_urls:
+                    continue
+                posts.append(p)
+                if p.get("url"):
+                    seen_urls.add(p["url"])
+            posts = posts[:3]
 
         out.append({
             "ticker": sym, "name": name, "mentions": mentions, "prev": prev,
@@ -542,6 +615,14 @@ def classify_setup(r: dict) -> tuple[str, float, str]:
 
 
 # ---------------------------------------------------------------- report
+
+def _upvote_text(post: dict) -> str:
+    """'N upvotes' label, or '' for RSS posts (Atom feeds have no vote data, so
+    they always carry score=0 — showing '0 upvotes' would be misleading)."""
+    if post.get("score", 0) == 0 and post.get("via_rss"):
+        return ""
+    return f"{post.get('score', 0)} upvotes"
+
 
 def format_table(headers: list[str], rows: list[list[str]]) -> list[str]:
     """Markdown table with padded cells so columns align in raw text too."""
@@ -606,8 +687,9 @@ def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: 
             lines.append(f"- Price: {price_txt}")
             if w["posts"]:
                 for p in w["posts"][:2]:
-                    lines.append(f"- Post: [{p['title'][:80]}]({p['url']}) "
-                                 f"(r/{p['subreddit']}, {p['score']} upvotes)")
+                    up = _upvote_text(p)
+                    meta = f"r/{p['subreddit']}" + (f", {up}" if up else "")
+                    lines.append(f"- Post: [{p['title'][:80]}]({p['url']}) ({meta})")
             else:
                 lines.append("- No posts retrieved (Reddit access pending or genuinely quiet)")
         lines.append("")
@@ -626,7 +708,9 @@ def build_report(today: str, ranked: list[dict], alerts: list[dict], watchlist: 
                 else "chatter building, price relatively quiet"
             lines.append(f"- 5-day price: {r['price_5d']:+.1f}% ({crowd})")
         for p in r.get("posts", [])[:2]:
-            lines.append(f"- Top post: [{p['title'][:80]}]({p['url']}) ({p['score']} upvotes)")
+            up = _upvote_text(p)
+            tail = f" ({up})" if up else ""
+            lines.append(f"- Top post: [{p['title'][:80]}]({p['url']}){tail}")
         lines.append("")
 
     if watchlist:

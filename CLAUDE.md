@@ -31,12 +31,24 @@ sentiment (claude-sonnet-4-6 via API) + Yahoo price data → composite score
   Reddit closed self-serve API registration — approval now via manual support ticket
   (submitted, account justlostmypizza) with high rejection rates for solo devs.
   Treat OAuth as "bonus if approved", not a dependency.
-- NEW (2026-07-26): RSS fallback layer in scanner.py. fetch_rss_entries() pulls each
-  subreddit's public top-of-day Atom feed (reddit.com/r/SUB/top.rss?t=day) ONCE per run
-  and caches it; match_rss_posts() matches tickers locally (conservative: "$SYM" always,
-  bare "SYM" only for 3+ char symbols to avoid EU/MU-style false hits, company name
-  case-insensitive at 4+ chars). fetch_reddit_posts() tries OAuth → public search →
-  RSS fallback, in that order. RSS posts carry score=0 (Atom has no upvote counts).
+- NEW (2026-07-26): RSS fallback layer in scanner.py. fetch_rss_entries() pulls BOTH
+  the top-of-day AND hot Atom feeds (reddit.com/r/SUB/top.rss?t=day and /hot.rss) for
+  each sub ONCE per run, deduped by post URL and cached (top surfaces the day's biggest
+  threads, hot catches fast-risers that haven't peaked). Feed fetch cap is
+  RSS_POSTS_PER_SUB = 100 (Reddit's public-feed max). match_rss_posts() matches tickers
+  locally (conservative, UNCHANGED: "$SYM" always, bare "SYM" only for 3+ char symbols
+  to avoid EU/MU-style false hits, company name case-insensitive at 4+ chars).
+  fetch_reddit_posts() tries OAuth → public search → RSS fallback, in that order.
+  RSS_SUBREDDITS now includes TheRaceTo10Million — note it feeds ONLY the RSS/sentiment
+  leg; it is not an ApeWisdom filter, so it never affects mention counts or breadth.
+  Dedicated watchlist subs: WATCHLIST_SUBREDDITS (near MY_WATCHLIST) maps a ticker to
+  its own subreddit; build_my_watchlist() fetches that sub's top-of-day feed via
+  fetch_watchlist_sub_posts() (cached per sub) and treats every post as auto-relevant —
+  NO ticker/name text match, because dedicated-sub posts rarely spell out the cashtag —
+  then merges with the normal fetch_reddit_posts() results, deduped by URL, capped at 3.
+  Currently WATCHLIST_SUBREDDITS = {"SKHY": "SKHynix"}.
+  RSS-sourced posts carry score=0 (Atom has no upvote counts) and a via_rss=True flag;
+  the report omits the "(N upvotes)" text for such posts rather than printing "0 upvotes".
   UNTESTED from GitHub Actions runners — Reddit's datacenter-IP blocking may also 403
   the RSS feeds; if so, sentiment gracefully degrades to the 0.40 default as before.
   Plan B if RSS also blocked from Actions: run post-fetching from owner's home PC
