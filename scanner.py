@@ -153,9 +153,12 @@ def get_reddit_token() -> str | None:
     return _reddit_token
 
 
-def fetch_reddit_posts(ticker: str, limit: int = 3, query: str | None = None) -> list[dict]:
+def fetch_reddit_posts(ticker: str, limit: int = 3, query: str | None = None,
+                       name: str | None = None) -> list[dict]:
     """Pull today's top posts mentioning the ticker. Uses OAuth if configured.
-    Pass `query` to search custom terms (e.g. ticker OR company name)."""
+    Pass `query` to search custom terms (e.g. ticker OR company name).
+    Falls back to public RSS feeds when the search API returns nothing
+    (Reddit's search endpoints are gated/throttled without approval)."""
     token = get_reddit_token()
     base = "https://oauth.reddit.com" if token else "https://www.reddit.com"
     headers = {"User-Agent": USER_AGENT}
@@ -180,10 +183,96 @@ def fetch_reddit_posts(ticker: str, limit: int = 3, query: str | None = None) ->
                 "subreddit": d.get("subreddit", ""),
                 "url": "https://www.reddit.com" + d.get("permalink", ""),
             })
-        return posts
+        if posts:
+            return posts
+        print(f"[info] search empty for {ticker}, trying RSS fallback")
     except Exception as exc:  # noqa: BLE001
-        print(f"[warn] Reddit fetch failed for {ticker}: {exc}")
-        return []
+        print(f"[warn] Reddit search failed for {ticker}, trying RSS fallback: {exc}")
+    return match_rss_posts(ticker, name=name, limit=limit)
+
+
+# --- RSS fallback (no API key needed) ---------------------------------
+# Reddit's search API now requires manual approval, but every subreddit
+# still exposes a public Atom feed (add .rss to the URL). We fetch each
+# subreddit's top-of-day feed ONCE per run (5 requests total), cache the
+# entries, and match tickers against them locally. Low volume, polite,
+# and it unlocks real sentiment scores while OAuth approval is pending.
+
+RSS_SUBREDDITS = ["wallstreetbets", "stocks", "pennystocks", "options", "smallstreetbets"]
+RSS_POSTS_PER_SUB = 50
+
+_rss_cache: list[dict] | None = None
+
+_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def _strip_html(text: str) -> str:
+    """Crude but sufficient: drop tags, unescape common entities."""
+    text = _TAG_RE.sub(" ", text or "")
+    for ent, ch in [("&amp;", "&"), ("&lt;", "<"), ("&gt;", ">"),
+                    ("&quot;", '"'), ("&#39;", "'"), ("&nbsp;", " ")]:
+        text = text.replace(ent, ch)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def fetch_rss_entries() -> list[dict]:
+    """Fetch + cache today's top posts from each subreddit's Atom feed."""
+    global _rss_cache
+    if _rss_cache is not None:
+        return _rss_cache
+    import xml.etree.ElementTree as ET
+    ns = {"a": "http://www.w3.org/2005/Atom"}
+    entries: list[dict] = []
+    for sub in RSS_SUBREDDITS:
+        url = f"https://www.reddit.com/r/{sub}/top.rss?t=day&limit={RSS_POSTS_PER_SUB}"
+        try:
+            resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=30)
+            resp.raise_for_status()
+            root = ET.fromstring(resp.content)
+            for entry in root.findall("a:entry", ns):
+                title = (entry.findtext("a:title", "", ns) or "").strip()
+                content = _strip_html(entry.findtext("a:content", "", ns) or "")
+                link_el = entry.find("a:link", ns)
+                link = link_el.get("href", "") if link_el is not None else ""
+                entries.append({
+                    "title": title,
+                    "text": content[:1500],
+                    "score": 0,  # Atom feeds don't carry upvote counts
+                    "num_comments": 0,
+                    "subreddit": sub,
+                    "url": link,
+                })
+            print(f"[info] RSS: fetched {sub} top-of-day feed.")
+        except Exception as exc:  # noqa: BLE001
+            print(f"[warn] RSS fetch failed for r/{sub}: {exc}")
+        time.sleep(2)  # be polite between feed requests
+    _rss_cache = entries
+    print(f"[info] RSS: cached {len(entries)} posts across {len(RSS_SUBREDDITS)} subs.")
+    return entries
+
+
+def match_rss_posts(ticker: str, name: str | None = None, limit: int = 3) -> list[dict]:
+    """Match a ticker (and optionally company name) against cached RSS posts.
+
+    Matching is deliberately conservative to avoid false hits:
+    - "$SYM" always matches
+    - bare "SYM" (word boundary, case-sensitive) only for symbols of 3+ chars,
+      because short tickers collide with ordinary words/acronyms (EU, MU, IP...)
+    - company name matches case-insensitively when 4+ chars
+    """
+    sym = ticker.upper()
+    bare = re.compile(rf"\b{re.escape(sym)}\b") if len(sym) >= 3 else None
+    name_lc = name.lower() if name and len(name) >= 4 else None
+    matched = []
+    for post in fetch_rss_entries():
+        blob = f"{post['title']} {post['text']}"
+        if (f"${sym}" in blob
+                or (bare and bare.search(blob))
+                or (name_lc and name_lc in blob.lower())):
+            matched.append(post)
+            if len(matched) >= limit:
+                break
+    return matched
 
 
 def fetch_price_data(ticker: str) -> tuple[float | None, float | None]:
@@ -399,7 +488,7 @@ def build_my_watchlist(tickers: dict, history: dict) -> list[dict]:
         time.sleep(0.5)
         # Search by ticker OR company name — catches new listings that
         # mention-counters haven't indexed and posts that don't use the cashtag.
-        posts = fetch_reddit_posts(sym, limit=3, query=f'"{sym}" OR "{name}"')
+        posts = fetch_reddit_posts(sym, limit=3, query=f'"{sym}" OR "{name}"', name=name)
         time.sleep(2)
 
         out.append({

@@ -27,13 +27,22 @@ sentiment (claude-sonnet-4-6 via API) + Yahoo price data → composite score
 
 - WORKING: ApeWisdom collection, scoring, setup labels, price context, hit-rate
   tracker, personal watchlist, daily Actions run, aligned tables.
-- BLOCKED: Reddit post fetching 403s from GitHub's datacenter IPs. Reddit API
-  registration submitted (form: support.reddithelp.com ticket, account justlostmypizza),
-  awaiting approval. Until then sentiment defaults to 0.40 ("no substantive posts") and
-  EVENT GAMBLE labels cannot fire. When approved: create script-type app at
-  reddit.com/prefs/apps, add repo secrets REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET —
-  zero code changes needed, OAuth support is already in fetch_reddit_posts/get_reddit_token.
-  Plan B if rejected: run post-fetching from owner's home PC (residential IP not blocked).
+- BLOCKED-ish: Reddit search API 403s from GitHub's datacenter IPs, AND (2026 update)
+  Reddit closed self-serve API registration — approval now via manual support ticket
+  (submitted, account justlostmypizza) with high rejection rates for solo devs.
+  Treat OAuth as "bonus if approved", not a dependency.
+- NEW (2026-07-26): RSS fallback layer in scanner.py. fetch_rss_entries() pulls each
+  subreddit's public top-of-day Atom feed (reddit.com/r/SUB/top.rss?t=day) ONCE per run
+  and caches it; match_rss_posts() matches tickers locally (conservative: "$SYM" always,
+  bare "SYM" only for 3+ char symbols to avoid EU/MU-style false hits, company name
+  case-insensitive at 4+ chars). fetch_reddit_posts() tries OAuth → public search →
+  RSS fallback, in that order. RSS posts carry score=0 (Atom has no upvote counts).
+  UNTESTED from GitHub Actions runners — Reddit's datacenter-IP blocking may also 403
+  the RSS feeds; if so, sentiment gracefully degrades to the 0.40 default as before.
+  Plan B if RSS also blocked from Actions: run post-fetching from owner's home PC
+  (residential IP not blocked).
+  If OAuth ever approved: add repo secrets REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET —
+  OAuth takes priority automatically, zero code changes.
 - WARM-UP: baselines need ~5 days of history (started 2026-07-18). Until then velocity
   uses 24h-ago comparison capped at 0.6, z-scores read 0, and no 5σ alerts fire.
   Scoreboard fills in from ~2026-07-21 (picks must age 3 days).
