@@ -433,64 +433,64 @@
 ],
 "2026-07-26": [
 {
-"ticker": "EU",
-"price": 1.14,
-"composite": 0.448,
-"setup": "NOISE"
-},
-{
 "ticker": "SPCX",
 "price": 115.07,
 "composite": 0.39,
-"setup": "FADING"
-},
-{
-"ticker": "META",
-"price": 595.19,
-"composite": 0.39,
-"setup": "FADING"
-},
-{
-"ticker": "RKLB",
-"price": 63.91,
-"composite": 0.39,
 "setup": "NOISE"
-},
-{
-"ticker": "ASTS",
-"price": 56.2,
-"composite": 0.39,
-"setup": "NOISE"
-},
-{
-"ticker": "NBIS",
-"price": 187.77,
-"composite": 0.39,
-"setup": "FADING"
-},
-{
-"ticker": "GOOGL",
-"price": 319.74,
-"composite": 0.352,
-"setup": "FADING"
-},
-{
-"ticker": "MU",
-"price": 920.95,
-"composite": 0.252,
-"setup": "FADING"
 },
 {
 "ticker": "MSFT",
 "price": 381.7,
-"composite": 0.252,
-"setup": "FADING"
+"composite": 0.39,
+"setup": "NOISE"
 },
 {
-"ticker": "NVDA",
-"price": 206.84,
+"ticker": "MU",
+"price": 920.95,
+"composite": 0.39,
+"setup": "NOISE"
+},
+{
+"ticker": "TSLA",
+"price": 313.03,
+"composite": 0.39,
+"setup": "NOISE"
+},
+{
+"ticker": "GOOG",
+"price": 319.09,
+"composite": 0.39,
+"setup": "NOISE"
+},
+{
+"ticker": "AMD",
+"price": 521.95,
+"composite": 0.39,
+"setup": "NOISE"
+},
+{
+"ticker": "AMZN",
+"price": 232.11,
+"composite": 0.39,
+"setup": "NOISE"
+},
+{
+"ticker": "NOW",
+"price": 98.78,
+"composite": 0.352,
+"setup": "NOISE"
+},
+{
+"ticker": "META",
+"price": 595.19,
 "composite": 0.252,
-"setup": "FADING"
+"setup": "NOISE"
+},
+{
+"ticker": "EU",
+"price": 1.14,
+"composite": 0.244,
+"setup": "NOISE"
 }
 ]
 }
