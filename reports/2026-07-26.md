@@ -8,14 +8,14 @@
 |----|-----------|-------------|-------|----------|----------|-----------|---------|----------|
 | 1  | **$SPCX** | NOISE (0.7) | 0.39  | 46       | 0.00     | 0.40      | 1.00    | -4.0%    |
 | 2  | **$MSFT** | NOISE (0.7) | 0.39  | 43       | 0.00     | 0.40      | 1.00    | -5.1%    |
-| 3  | **$MU**   | NOISE (0.7) | 0.39  | 36       | 0.00     | 0.40      | 1.00    | +6.4%    |
+| 3  | **$MU**   | NOISE (0.7) | 0.39  | 37       | 0.00     | 0.40      | 1.00    | +6.4%    |
 | 4  | **$TSLA** | NOISE (0.7) | 0.39  | 32       | 0.00     | 0.40      | 1.00    | -15.3%   |
-| 5  | **$GOOG** | NOISE (0.7) | 0.39  | 22       | 0.00     | 0.40      | 1.00    | -9.2%    |
-| 6  | **$AMD**  | NOISE (0.7) | 0.39  | 19       | 0.00     | 0.40      | 1.00    | +3.6%    |
-| 7  | **$AMZN** | NOISE (0.7) | 0.39  | 20       | 0.00     | 0.40      | 1.00    | -7.2%    |
+| 5  | **$GOOG** | NOISE (0.7) | 0.39  | 21       | 0.00     | 0.40      | 1.00    | -9.2%    |
+| 6  | **$AMD**  | NOISE (0.7) | 0.39  | 18       | 0.00     | 0.40      | 1.00    | +3.6%    |
+| 7  | **$AMZN** | NOISE (0.7) | 0.39  | 19       | 0.00     | 0.40      | 1.00    | -7.2%    |
 | 8  | **$NOW**  | NOISE (0.7) | 0.35  | 19       | 0.00     | 0.40      | 0.85    | -5.7%    |
 | 9  | **$META** | NOISE (0.4) | 0.25  | 22       | 0.00     | 0.40      | 0.45    | -7.8%    |
-| 10 | **$EU**   | NOISE (0.4) | 0.24  | 46       | 0.17     | 0.40      | 0.15    | -3.4%    |
+| 10 | **$EU**   | NOISE (0.4) | 0.25  | 46       | 0.18     | 0.40      | 0.15    | -3.4%    |
 
 *Setup labels are hypotheses about the situation type, not buy/sell advice: EARLY = chatter building before price; CROWD REACTION = chatter chasing a move; EVENT GAMBLE = binary catalyst ahead; FADING = losing steam; NOISE = background hum.*
 
@@ -35,14 +35,14 @@
 
 ### $MSFT — Microsoft
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: -1.6σ vs 7d baseline (-66%)
+- Velocity: -1.7σ vs 7d baseline (-66%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: -5.1% (chatter building, price relatively quiet)
 
 ### $MU — Micron Technology
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: -1.5σ vs 7d baseline (-89%)
+- Velocity: -1.5σ vs 7d baseline (-88%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: +6.4% (chatter building, price relatively quiet)
@@ -56,25 +56,24 @@
 
 ### $GOOG — Alphabet (Google)
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: -0.9σ vs 7d baseline (-82%)
+- Velocity: -0.9σ vs 7d baseline (-83%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: -9.2% (chatter building, price relatively quiet)
 
 ### $AMD — AMD
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: -1.4σ vs 7d baseline (-64%)
+- Velocity: -1.6σ vs 7d baseline (-67%)
 - Breadth: in 4 subs incl. small caps
 - Sentiment: no substantive posts found
 - 5-day price: +3.6% (chatter building, price relatively quiet)
 
 ### $AMZN — Amazon
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
-- Velocity: -0.5σ vs 7d baseline (-27%)
+- Velocity: -0.5σ vs 7d baseline (-31%)
 - Breadth: in 4 subs incl. small caps
-- Sentiment: User thanks WSB, mentions past AMZN gains nostalgically
+- Sentiment: no substantive posts found
 - 5-day price: -7.2% (chatter building, price relatively quiet)
-- Top post: [Thank you, regards!](https://www.reddit.com/r/wallstreetbets/comments/1v5y4aa/thank_you_regards/) (0 upvotes)
 
 ### $NOW — ServiceNow
 - **Hypothesis: NOISE (0.7)** — high visibility, no spike — background mega-cap hum
@@ -85,14 +84,14 @@
 
 ### $META — Meta Platforms (Facebook)
 - **Hypothesis: NOISE (0.4)** — mixed signals, nothing decisive
-- Velocity: -0.9σ vs 7d baseline (-56%)
+- Velocity: -0.9σ vs 7d baseline (-55%)
 - Breadth: in 2 subs
 - Sentiment: no substantive posts found
 - 5-day price: -7.8% (chatter building, price relatively quiet)
 
 ### $EU — enCore Energy
 - **Hypothesis: NOISE (0.4)** — mixed signals, nothing decisive
-- Velocity: +1.0σ vs 7d baseline (+67%)
+- Velocity: +1.1σ vs 7d baseline (+69%)
 - Breadth: in 1 subs
 - Sentiment: no substantive posts found
 - 5-day price: -3.4% (chatter building, price relatively quiet)
@@ -101,9 +100,9 @@
 - **$TSLA**: mentions 425 → 32 (fading)
 - **$SPCX**: mentions 360 → 46 (fading)
 - **$INTC**: mentions 339 → 10 (fading)
-- **$MU**: mentions 334 → 36 (fading)
-- **$GOOG**: mentions 256 → 22 (fading)
-- **$GOOGL**: mentions 193 → 19 (fading)
+- **$MU**: mentions 334 → 37 (fading)
+- **$GOOG**: mentions 256 → 21 (fading)
+- **$GOOGL**: mentions 193 → 18 (fading)
 - **$MSFT**: mentions 152 → 43 (fading)
 - **$NOW**: mentions 103 → 19 (fading)
 - **$NVDA**: mentions 101 → 12 (fading)
