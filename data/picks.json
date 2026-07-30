@@ -333,70 +333,80 @@
 "price": 100.23,
 "composite": 0.79,
 "setup": "EARLY",
-"ret_3d": -7.9
+"ret_3d": -7.9,
+"ret_7d": -18.3
 },
 {
 "ticker": "ES",
 "price": 74.62,
 "composite": 0.66,
 "setup": "EARLY",
-"ret_3d": 0.4
+"ret_3d": 0.4,
+"ret_7d": 0.2
 },
 {
 "ticker": "USO",
 "price": 139.49,
 "composite": 0.615,
 "setup": "CROWD REACTION",
-"ret_3d": -2.0
+"ret_3d": -2.0,
+"ret_7d": -7.3
 },
 {
 "ticker": "TSLA",
 "price": 319.69,
 "composite": 0.608,
 "setup": "CROWD REACTION",
-"ret_3d": -2.1
+"ret_3d": -2.1,
+"ret_7d": -6.7
 },
 {
 "ticker": "AGI",
 "price": 29.38,
 "composite": 0.603,
 "setup": "EARLY",
-"ret_3d": 0.7
+"ret_3d": 0.7,
+"ret_7d": -2.7
 },
 {
 "ticker": "WTI",
 "price": 3.85,
 "composite": 0.582,
 "setup": "CROWD REACTION",
-"ret_3d": -4.9
+"ret_3d": -4.9,
+"ret_7d": -8.3
 },
 {
 "ticker": "EU",
 "price": 1.21,
 "composite": 0.549,
 "setup": "EARLY",
-"ret_3d": -5.8
+"ret_3d": -5.8,
+"ret_7d": -12.4
 },
 {
 "ticker": "AMZN",
 "price": 233.66,
 "composite": 0.546,
 "setup": "NOISE",
-"ret_3d": -0.7
+"ret_3d": -0.7,
+"ret_7d": -3.0
 },
 {
 "ticker": "SPCX",
 "price": 118.24,
 "composite": 0.51,
 "setup": "NOISE",
-"ret_3d": -2.7
+"ret_3d": -2.7,
+"ret_7d": -4.8
 },
 {
 "ticker": "GOOG",
 "price": 318.34,
 "composite": 0.445,
 "setup": "FADING",
-"ret_3d": 0.2
+"ret_3d": 0.2,
+"ret_7d": 5.5
 }
 ],
 "2026-07-24": [
@@ -548,61 +558,71 @@
 "ticker": "RR",
 "price": 1.58,
 "composite": 0.54,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": -14.6
 },
 {
 "ticker": "MU",
 "price": 916.63,
 "composite": 0.474,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": -19.4
 },
 {
 "ticker": "AMD",
 "price": 520.5,
 "composite": 0.435,
-"setup": "EVENT GAMBLE"
+"setup": "EVENT GAMBLE",
+"ret_3d": -17.5
 },
 {
 "ticker": "MSFT",
 "price": 390.27,
 "composite": 0.407,
-"setup": "EVENT GAMBLE"
+"setup": "EVENT GAMBLE",
+"ret_3d": 0.1
 },
 {
 "ticker": "NVDA",
 "price": 205.62,
 "composite": 0.407,
-"setup": "EVENT GAMBLE"
+"setup": "EVENT GAMBLE",
+"ret_3d": -7.6
 },
 {
 "ticker": "SPCX",
 "price": 112.23,
 "composite": 0.405,
-"setup": "EVENT GAMBLE"
+"setup": "EVENT GAMBLE",
+"ret_3d": 0.3
 },
 {
 "ticker": "TSLA",
 "price": 312.14,
 "composite": 0.39,
-"setup": "EVENT GAMBLE"
+"setup": "EVENT GAMBLE",
+"ret_3d": -4.4
 },
 {
 "ticker": "GOOG",
 "price": 326.21,
 "composite": 0.39,
-"setup": "NOISE"
+"setup": "NOISE",
+"ret_3d": 2.9
 },
 {
 "ticker": "AMZN",
 "price": 234.91,
 "composite": 0.39,
-"setup": "EVENT GAMBLE"
+"setup": "EVENT GAMBLE",
+"ret_3d": -3.5
 },
 {
 "ticker": "AAPL",
 "price": 336.96,
 "composite": 0.372,
-"setup": "EVENT GAMBLE"
+"setup": "EVENT GAMBLE",
+"ret_3d": 0.4
 }
 ],
 "2026-07-28": [
@@ -727,6 +747,68 @@
 "price": 820.53,
 "composite": 0.554,
 "setup": "CROWD REACTION"
+}
+],
+"2026-07-30": [
+{
+"ticker": "MSFT",
+"price": 390.54,
+"composite": 0.79,
+"setup": "EARLY"
+},
+{
+"ticker": "ET",
+"price": 20.2,
+"composite": 0.744,
+"setup": "EARLY"
+},
+{
+"ticker": "SOFI",
+"price": 15.25,
+"composite": 0.715,
+"setup": "EARLY"
+},
+{
+"ticker": "META",
+"price": 585.61,
+"composite": 0.653,
+"setup": "EARLY"
+},
+{
+"ticker": "HOOD",
+"price": 89.84,
+"composite": 0.624,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "ARM",
+"price": 224.89,
+"composite": 0.578,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "QCOM",
+"price": 155.68,
+"composite": 0.578,
+"setup": "EARLY"
+},
+{
+"ticker": "KW",
+"price": null,
+"composite": 0.578,
+"setup": "EARLY"
+},
+{
+"ticker": "AMZN",
+"price": 226.65,
+"composite": 0.557,
+"setup": "NOISE"
+},
+{
+"ticker": "ES",
+"price": 74.76,
+"composite": 0.549,
+"setup": "NOISE"
 }
 ]
 }
