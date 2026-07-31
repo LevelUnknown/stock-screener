@@ -415,70 +415,80 @@
 "price": 20.76,
 "composite": 0.492,
 "setup": "NOISE",
-"ret_3d": 1.4
+"ret_3d": 1.4,
+"ret_7d": 4.0
 },
 {
 "ticker": "GOOGL",
 "price": 317.69,
 "composite": 0.48,
 "setup": "NOISE",
-"ret_3d": 2.8
+"ret_3d": 2.8,
+"ret_7d": 5.0
 },
 {
 "ticker": "META",
 "price": 606.1,
 "composite": 0.45,
 "setup": "NOISE",
-"ret_3d": -0.7
+"ret_3d": -0.7,
+"ret_7d": -11.1
 },
 {
 "ticker": "EU",
 "price": 1.21,
 "composite": 0.443,
 "setup": "NOISE",
-"ret_3d": -0.8
+"ret_3d": -0.8,
+"ret_7d": -6.6
 },
 {
 "ticker": "BATL",
 "price": 1.73,
 "composite": 0.419,
 "setup": "NOISE",
-"ret_3d": -16.8
+"ret_3d": -16.8,
+"ret_7d": -20.8
 },
 {
 "ticker": "YOU",
 "price": 51.85,
 "composite": 0.418,
 "setup": "NOISE",
-"ret_3d": 2.1
+"ret_3d": 2.1,
+"ret_7d": 8.2
 },
 {
 "ticker": "SAP",
 "price": 146.38,
 "composite": 0.414,
 "setup": "EARLY",
-"ret_3d": 14.6
+"ret_3d": 14.6,
+"ret_7d": 23.6
 },
 {
 "ticker": "INTC",
 "price": 100.23,
 "composite": 0.402,
 "setup": "NOISE",
-"ret_3d": -6.5
+"ret_3d": -6.5,
+"ret_7d": -9.1
 },
 {
 "ticker": "RDDT",
 "price": 168.78,
 "composite": 0.401,
 "setup": "FADING",
-"ret_3d": 2.9
+"ret_3d": 2.9,
+"ret_7d": 5.5
 },
 {
 "ticker": "SPCX",
 "price": 118.24,
 "composite": 0.398,
 "setup": "NOISE",
-"ret_3d": -5.1
+"ret_3d": -5.1,
+"ret_7d": -5.1
 }
 ],
 "2026-07-26": [
@@ -630,61 +640,71 @@
 "ticker": "NVDA",
 "price": 196.51,
 "composite": 0.825,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": -0.7
 },
 {
 "ticker": "PLTR",
 "price": 131.53,
 "composite": 0.807,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": -7.0
 },
 {
 "ticker": "AAPL",
 "price": 336.91,
 "composite": 0.772,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": -1.0
 },
 {
 "ticker": "SNDK",
 "price": 1278.23,
 "composite": 0.712,
-"setup": "EVENT GAMBLE"
+"setup": "EVENT GAMBLE",
+"ret_3d": 0.1
 },
 {
 "ticker": "ASML",
 "price": 1655.26,
 "composite": 0.653,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": -0.2
 },
 {
 "ticker": "ADBE",
 "price": 237.75,
 "composite": 0.615,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": 4.3
 },
 {
 "ticker": "SLS",
 "price": 10.84,
 "composite": 0.585,
-"setup": "CROWD REACTION"
+"setup": "CROWD REACTION",
+"ret_3d": -5.1
 },
 {
 "ticker": "APLD",
 "price": 26.38,
 "composite": 0.578,
-"setup": "CROWD REACTION"
+"setup": "CROWD REACTION",
+"ret_3d": 6.0
 },
 {
 "ticker": "CLS",
 "price": 318.24,
 "composite": 0.578,
-"setup": "EARLY"
+"setup": "EARLY",
+"ret_3d": 10.8
 },
 {
 "ticker": "NVTS",
 "price": 11.41,
 "composite": 0.578,
-"setup": "CROWD REACTION"
+"setup": "CROWD REACTION",
+"ret_3d": -3.5
 }
 ],
 "2026-07-29": [
@@ -809,6 +829,68 @@
 "price": 74.76,
 "composite": 0.549,
 "setup": "NOISE"
+}
+],
+"2026-07-31": [
+{
+"ticker": "AAPL",
+"price": 333.43,
+"composite": 0.93,
+"setup": "EVENT GAMBLE"
+},
+{
+"ticker": "AMZN",
+"price": 235.5,
+"composite": 0.888,
+"setup": "EVENT GAMBLE"
+},
+{
+"ticker": "RDDT",
+"price": 178.04,
+"composite": 0.768,
+"setup": "EVENT GAMBLE"
+},
+{
+"ticker": "KEEL",
+"price": 4.05,
+"composite": 0.674,
+"setup": "EARLY"
+},
+{
+"ticker": "MSTR",
+"price": 97.74,
+"composite": 0.592,
+"setup": "EARLY"
+},
+{
+"ticker": "AXTI",
+"price": 46.94,
+"composite": 0.578,
+"setup": "EARLY"
+},
+{
+"ticker": "DDD",
+"price": 2.7,
+"composite": 0.574,
+"setup": "EARLY"
+},
+{
+"ticker": "RIVN",
+"price": 16.83,
+"composite": 0.572,
+"setup": "EARLY"
+},
+{
+"ticker": "MSFT",
+"price": 451.1,
+"composite": 0.548,
+"setup": "FADING"
+},
+{
+"ticker": "NBIS",
+"price": 188.43,
+"composite": 0.486,
+"setup": "EARLY"
 }
 ]
 }
