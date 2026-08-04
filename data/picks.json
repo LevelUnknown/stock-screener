@@ -661,70 +661,80 @@
 "price": 196.51,
 "composite": 0.825,
 "setup": "EARLY",
-"ret_3d": -0.7
+"ret_3d": -0.7,
+"ret_7d": 5.2
 },
 {
 "ticker": "PLTR",
 "price": 131.53,
 "composite": 0.807,
 "setup": "EARLY",
-"ret_3d": -7.0
+"ret_3d": -7.0,
+"ret_7d": -4.5
 },
 {
 "ticker": "AAPL",
 "price": 336.91,
 "composite": 0.772,
 "setup": "EARLY",
-"ret_3d": -1.0
+"ret_3d": -1.0,
+"ret_7d": -9.9
 },
 {
 "ticker": "SNDK",
 "price": 1278.23,
 "composite": 0.712,
 "setup": "EVENT GAMBLE",
-"ret_3d": 0.1
+"ret_3d": 0.1,
+"ret_7d": 0.8
 },
 {
 "ticker": "ASML",
 "price": 1655.26,
 "composite": 0.653,
 "setup": "EARLY",
-"ret_3d": -0.2
+"ret_3d": -0.2,
+"ret_7d": -0.8
 },
 {
 "ticker": "ADBE",
 "price": 237.75,
 "composite": 0.615,
 "setup": "EARLY",
-"ret_3d": 4.3
+"ret_3d": 4.3,
+"ret_7d": 5.7
 },
 {
 "ticker": "SLS",
 "price": 10.84,
 "composite": 0.585,
 "setup": "CROWD REACTION",
-"ret_3d": -5.1
+"ret_3d": -5.1,
+"ret_7d": 3.5
 },
 {
 "ticker": "APLD",
 "price": 26.38,
 "composite": 0.578,
 "setup": "CROWD REACTION",
-"ret_3d": 6.0
+"ret_3d": 6.0,
+"ret_7d": 11.8
 },
 {
 "ticker": "CLS",
 "price": 318.24,
 "composite": 0.578,
 "setup": "EARLY",
-"ret_3d": 10.8
+"ret_3d": 10.8,
+"ret_7d": 7.4
 },
 {
 "ticker": "NVTS",
 "price": 11.41,
 "composite": 0.578,
 "setup": "CROWD REACTION",
-"ret_3d": -3.5
+"ret_3d": -3.5,
+"ret_7d": 1.0
 }
 ],
 "2026-07-29": [
@@ -1001,6 +1011,68 @@
 "ticker": "NVDA",
 "price": 199.05,
 "composite": 0.39,
+"setup": "NOISE"
+}
+],
+"2026-08-04": [
+{
+"ticker": "AAOI",
+"price": 110.21,
+"composite": 0.848,
+"setup": "EVENT GAMBLE"
+},
+{
+"ticker": "PLTR",
+"price": 125.65,
+"composite": 0.807,
+"setup": "EVENT GAMBLE"
+},
+{
+"ticker": "CD",
+"price": 2.99,
+"composite": 0.715,
+"setup": "EARLY"
+},
+{
+"ticker": "COHR",
+"price": 288.14,
+"composite": 0.711,
+"setup": "EVENT GAMBLE"
+},
+{
+"ticker": "LITE",
+"price": 779.89,
+"composite": 0.694,
+"setup": "EVENT GAMBLE"
+},
+{
+"ticker": "AMD",
+"price": 484.64,
+"composite": 0.613,
+"setup": "EARLY"
+},
+{
+"ticker": "CAT",
+"price": 830.03,
+"composite": 0.578,
+"setup": "EARLY"
+},
+{
+"ticker": "SNAP",
+"price": 5.04,
+"composite": 0.566,
+"setup": "EARLY"
+},
+{
+"ticker": "CC",
+"price": 17.11,
+"composite": 0.441,
+"setup": "EARLY"
+},
+{
+"ticker": "SOFI",
+"price": 18.03,
+"composite": 0.438,
 "setup": "NOISE"
 }
 ]
