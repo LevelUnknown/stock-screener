@@ -743,70 +743,80 @@
 "price": 747.3,
 "composite": 0.775,
 "setup": "EVENT GAMBLE",
-"ret_3d": 14.6
+"ret_3d": 14.6,
+"ret_7d": 13.1
 },
 {
 "ticker": "SOFI",
 "price": 16.74,
 "composite": 0.715,
 "setup": "EARLY",
-"ret_3d": -2.6
+"ret_3d": -2.6,
+"ret_7d": 11.7
 },
 {
 "ticker": "GLW",
 "price": 126.01,
 "composite": 0.615,
 "setup": "CROWD REACTION",
-"ret_3d": 9.7
+"ret_3d": 9.7,
+"ret_7d": 26.9
 },
 {
 "ticker": "HOOD",
 "price": 92.76,
 "composite": 0.595,
 "setup": "CROWD REACTION",
-"ret_3d": -6.7
+"ret_3d": -6.7,
+"ret_7d": 0.8
 },
 {
 "ticker": "UPS",
 "price": 105.53,
 "composite": 0.578,
 "setup": "EARLY",
-"ret_3d": -1.2
+"ret_3d": -1.2,
+"ret_7d": 3.4
 },
 {
 "ticker": "VRT",
 "price": 269.56,
 "composite": 0.578,
 "setup": "CROWD REACTION",
-"ret_3d": -10.4
+"ret_3d": -10.4,
+"ret_7d": 0.1
 },
 {
 "ticker": "MSFT",
 "price": 393.35,
 "composite": 0.575,
 "setup": "NOISE",
-"ret_3d": 18.1
+"ret_3d": 18.1,
+"ret_7d": 25.3
 },
 {
 "ticker": "PLTR",
 "price": 123.53,
 "composite": 0.565,
 "setup": "EARLY",
-"ret_3d": -0.4
+"ret_3d": -0.4,
+"ret_7d": 31.7
 },
 {
 "ticker": "AM",
 "price": 21.75,
 "composite": 0.564,
 "setup": "EARLY",
-"ret_3d": 1.0
+"ret_3d": 1.0,
+"ret_7d": 0.5
 },
 {
 "ticker": "MU",
 "price": 820.53,
 "composite": 0.554,
 "setup": "CROWD REACTION",
-"ret_3d": 0.3
+"ret_3d": 0.3,
+"ret_7d": 8.8
 }
 ],
 "2026-07-30": [
@@ -1074,6 +1084,68 @@
 "price": 18.03,
 "composite": 0.438,
 "setup": "NOISE"
+}
+],
+"2026-08-05": [
+{
+"ticker": "AMD",
+"price": 518.58,
+"composite": 0.86,
+"setup": "EVENT GAMBLE"
+},
+{
+"ticker": "SPCX",
+"price": 125.33,
+"composite": 0.76,
+"setup": "EVENT GAMBLE"
+},
+{
+"ticker": "LLY",
+"price": 1115.68,
+"composite": 0.735,
+"setup": "EARLY"
+},
+{
+"ticker": "UBER",
+"price": 71.99,
+"composite": 0.677,
+"setup": "EARLY"
+},
+{
+"ticker": "SHOP",
+"price": 123.3,
+"composite": 0.653,
+"setup": "EARLY"
+},
+{
+"ticker": "AVGO",
+"price": 418.16,
+"composite": 0.642,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "NVO",
+"price": 44.28,
+"composite": 0.615,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "ANET",
+"price": 190.51,
+"composite": 0.615,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "ALAB",
+"price": 361.67,
+"composite": 0.578,
+"setup": "CROWD REACTION"
+},
+{
+"ticker": "KTOS",
+"price": 51.87,
+"composite": 0.578,
+"setup": "CROWD REACTION"
 }
 ]
 }
